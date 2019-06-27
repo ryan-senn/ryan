@@ -1,10 +1,12 @@
 defmodule RyanWeb.Router do
   use RyanWeb, :router
+  alias Phoenix.LiveView
 
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_flash
+    plug LiveView.Flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
   end
