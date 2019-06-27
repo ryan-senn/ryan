@@ -1,0 +1,30 @@
+<section id="salary-seeker">
+    <h1>Salary seeker tool</h1>
+    <div class="examples">
+        <p>Copy and paste the Job ID or URL, for example:</p>
+        <ul>
+            <li>39338584</li>
+            <li>https://www.seek.com.au/job/39338584</li>
+            <li>https://www.seek.com.au/job/39338584?searchrequesttoken=c3035450-f42c-4d9f-815d-452c8c77a9f6&type=standout</li>
+        </ul>
+    </div>
+    <form phx-change="update-input">
+        <label for="input">
+            <span>Job ID or URL</span>
+        </label>
+        <input type="text" name="input" value="<%= @input %>" />
+        <button phx-click="search">search</button>
+    </form>
+    <%= if @job_not_found do %>
+        <p>Could not find requested job.</p>
+    <% end %>
+    <%= if @is_searching && @job_not_found == false do %>
+        <p>
+            <div>Job: <%= if @job.title == nil do %>Fetching... <% else %><%= @job.title %><% end %></div>
+            <%= if @job.title != nil do %>
+                <div>Min salary: <%= if @min_salary.final == nil do %>Clamping... <%= @min_salary.min %> - <%= @min_salary.max %> <% else %>$<%= @min_salary.final %><% end %></div>
+                <div>Max salary: <%= if @max_salary.final == nil do %>Clamping... <%= @max_salary.min %> - <%= @max_salary.max %> <% else %>$<%= @max_salary.final %><% end %></div>
+            <% end %>
+        </p>
+    <% end %>
+</section>

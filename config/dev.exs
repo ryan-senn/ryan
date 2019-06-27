@@ -79,7 +79,3 @@ config :ryan, Ryan.Repo,
   hostname: "localhost",
   pool_size: 10
 
-config :ryan, RyanWeb.Endpoint,
-  live_view: [
-    signing_salt: "tOakmYu0jJLvmzx3//SgdQJkvrd0q0D9"
-  ]

@@ -15,6 +15,7 @@
             <nav>
                 <ul>
                     <li><a href="<%= Routes.page_path(@conn, :index) %>">Home</a></li>
+                    <li><a href="<%= Routes.live_path(@conn, RyanWeb.SalarySeekerLive) %>">Salary Seeker</a></li>
                 </ul>
             </nav>
         </div>

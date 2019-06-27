@@ -19,6 +19,8 @@ defmodule RyanWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+
+    live "/salary-seeker", SalarySeekerLive
   end
 
   # Other scopes may use custom stacks.
