@@ -21,6 +21,7 @@ defmodule RyanWeb.Router do
     get "/", PageController, :index
 
     live "/salary-seeker", SalarySeekerLive
+    live "/inflation-calculator", InflationCalculatorLive
   end
 
   # Other scopes may use custom stacks.
