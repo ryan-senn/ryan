@@ -9,9 +9,7 @@
         </ul>
     </div>
     <form phx-change="update-input">
-        <label for="input">
-            <span>Job ID or URL</span>
-        </label>
+        <label for="input">Job ID or URL</label>
         <input type="text" name="input" value="<%= @input %>" />
         <button phx-click="search">search</button>
     </form>
