@@ -21,6 +21,7 @@ defmodule RyanWeb.Router do
     get "/", PageController, :index
 
     live "/salary-seeker", SalarySeekerLive
+    live "/domain-price", DomainPriceLive
     live "/inflation-calculator", InflationCalculatorLive
   end
 

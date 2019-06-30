@@ -1,0 +1,27 @@
+<section id="domain-price">
+    <h1>Domain price tool</h1>
+        <div class="examples">
+        <p>Copy and paste the Job ID or URL, for example:</p>
+        <ul>
+            <li>2013609971</li>
+            <li>https://www.domain.com.au/60-clare-place-the-gap-qld-4061-2013609971</li>
+        </ul>
+    </div>
+    <form phx-change="update-input">
+        <label for="input">Property ID or URL</label>
+        <input type="text" name="input" value="<%= @input %>" />
+        <button phx-click="search">search</button>
+    </form>
+    <%= if @not_found do %>
+        <p>Could not find requested property.</p>
+    <% end %>
+    <%= if @is_searching && @not_found == false do %>
+        <p>
+            <div>Property: <%= if @property == nil do %>Fetching... <% else %><%= @property["addressParts"]["displayAddress"] %><% end %></div>
+            <%= if @property != nil do %>
+                <div>Min price: <%= if @min.match == nil do %>Clamping... <%= @min.min %> - <%= @min.max %> <% else %>$<%= @min.match %><% end %></div>
+                <div>Max price: <%= if @max.match == nil do %>Clamping... <%= @max.min %> - <%= @max.max %> <% else %>$<%= @max.match %><% end %></div>
+            <% end %>
+        </p>
+    <% end %>
+</section>
