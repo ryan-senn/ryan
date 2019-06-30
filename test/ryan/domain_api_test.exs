@@ -4,12 +4,12 @@ defmodule Ryan.DomainApiTest do
   alias Ryan.DomainApi
 
   test "keeps valid id" do
-    assert DomainApi.property_id("2013609971") == "2013609971"
+    assert DomainApi.property_id("2015383723") == "2015383723"
   end
 
   test "it removes domain url" do
     assert DomainApi.property_id(
-             "https://www.domain.com.au/60-clare-place-the-gap-qld-4061-2013609971"
-           ) == "2013609971"
+             "https://www.domain.com.au/1-teroma-street-the-gap-qld-4061-2015383723"
+           ) == "2015383723"
   end
 end

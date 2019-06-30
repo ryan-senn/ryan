@@ -1,12 +1,10 @@
 defmodule Ryan.DomainApi do
-  @domain_api_client_id "client_9b78981d02b74cc3aba568f764a430dc"
-  @domain_api_secret "secret_402e9597912406c594c7c5140db85f53"
 
   def property_id(input) do
     String.slice(input, -10, 10)
   end
 
-  def get_access_token() do
+  def get_access_token(domain_api_client_id, domain_api_secret) do
     HTTPoison.post!(
       "https://auth.domain.com.au/v1/connect/token",
       URI.encode_query(%{
@@ -16,7 +14,7 @@ defmodule Ryan.DomainApi do
       [
         {"Content-Type", "application/x-www-form-urlencoded"},
         {"Authorization",
-         "Basic #{Base.encode64("#{@domain_api_client_id}:#{@domain_api_secret}")}"}
+         "Basic #{Base.encode64("#{domain_api_client_id}:#{domain_api_secret}")}"}
       ]
     )
     |> (fn response -> response.body end).()
@@ -29,8 +27,6 @@ defmodule Ryan.DomainApi do
       "https://api.domain.com.au/v1/listings/#{property_id}",
       [{"Authorization", "Bearer #{access_token}"}]
     )
-    |> (fn response -> response.body end).()
-    |> Jason.decode!()
   end
 
   def get_properties(property, min, max, access_token) do

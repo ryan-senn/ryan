@@ -2,8 +2,8 @@ defmodule RyanWeb.DomainPriceLive do
   use Phoenix.LiveView
   alias Ryan.DomainApi
 
-  @min 100_000
-  @max 10_000_000
+  @min 200_000
+  @max 5_000_000
   @increments 1_000
 
   @clamp %{min: @min, max: @max, match: nil}
@@ -13,21 +13,36 @@ defmodule RyanWeb.DomainPriceLive do
   def mount(_params, socket) do
     {:ok,
      assign(socket,
-       input: "",
+       property_input: "",
+       client_id_input: "client_76f828f793fe40d5879cf2d40cfc0bc5",
+       client_secret_input: "secret_74f38337117edd26a3b2ea86eae93685",
        is_searching: false,
-       not_found: false,
+       error: nil,
        property: nil,
        min: @clamp,
        max: @clamp
      )}
   end
 
-  def handle_event("update-input", %{"input" => input}, socket) do
-    {:noreply, assign(socket, input: input)}
+  def handle_event(
+        "update-input",
+        %{
+          "property_input" => property_input,
+          "client_id_input" => client_id_input,
+          "client_secret_input" => client_secret_input
+        },
+        socket
+      ) do
+    {:noreply,
+     assign(socket,
+       property_input: property_input,
+       client_id_input: client_id_input,
+       client_secret_input: client_secret_input
+     )}
   end
 
   def handle_event("search", _params, socket) do
-    property_id = DomainApi.property_id(socket.assigns.input)
+    property_id = DomainApi.property_id(socket.assigns.property_input)
 
     send(self(), {:load, property_id})
 
@@ -35,18 +50,38 @@ defmodule RyanWeb.DomainPriceLive do
   end
 
   def handle_info({:load, property_id}, socket) do
-    access_token = DomainApi.get_access_token()
+    access_token =
+      DomainApi.get_access_token(
+        socket.assigns.client_id_input,
+        socket.assigns.client_secret_input
+      )
 
-    try do
-      property = DomainApi.get_property(property_id, access_token)
+    property_response = DomainApi.get_property(property_id, access_token)
 
-      send(self(), {:min_request, property, @clamp, access_token})
-      send(self(), {:max_request, property, @clamp, access_token})
+    IO.inspect(property_response)
 
-      {:noreply, assign(socket, property: property)}
-    rescue
-      Jason.DecodeError ->
-        {:noreply, assign(socket, not_found: true)}
+    case property_response.status_code do
+      200 ->
+        property =
+          property_response.body
+          |> Jason.decode!()
+
+        send(self(), {:min_request, property, @clamp, access_token})
+        send(self(), {:max_request, property, @clamp, access_token})
+
+        {:noreply, assign(socket, property: property)}
+
+      401 ->
+        {:noreply, assign(socket, error: :denied)}
+
+      404 ->
+        {:noreply, assign(socket, error: :not_found)}
+
+      429 ->
+        {:noreply, assign(socket, error: :rate_limit)}
+
+      _ ->
+        {:noreply, assign(socket, error: :unknown)}
     end
   end
 
@@ -109,6 +144,9 @@ defmodule RyanWeb.DomainPriceLive do
   end
 
   defp is_found(property, min, max, access_token) do
+    # domain has an API call limit, wait 50ms
+    Process.sleep(50)
+
     property
     |> DomainApi.get_properties(min, max, access_token)
     |> Enum.filter(fn data -> data["listing"]["id"] == property["id"] end)
