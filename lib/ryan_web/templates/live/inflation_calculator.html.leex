@@ -5,8 +5,8 @@
         <input type="text" value="<%= @price %>" name="price" id="price" />
         <label for="year">Starting Year</label>
         <select name="year" id="year">
-        <%= for i <- Ryan.Inflation.start_year() .. Enum.count(Ryan.Inflation.list()) + Ryan.Inflation.start_year() do %>
-            <option value="<%= i  %>" <%= if @year == i do %>selected<% end %>><%= i %></option>
+        <%= for i <- Ryan.Inflation.start_year() .. Enum.count(Ryan.Inflation.list()) + Ryan.Inflation.start_year() - 1 do %>
+            <option value="<%= i %>" <%= if @year == i do %>selected<% end %>><%= i %></option>
         <% end %>
         </select>
         <label>Is now: $<%= @inflation |> Enum.at(-1) |> elem(0) %></label>
