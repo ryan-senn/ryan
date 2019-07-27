@@ -14,6 +14,7 @@ header
 
     nav ul
         display: flex
+        flex-wrap: wrap
         list-style: none
         margin: 0
 
@@ -43,7 +44,69 @@ footer
 section#salary-seeker
     div.examples
         p
-            margin-bottom: 10px
+            margin-bottom: 1rem
 
         ul
-            margin-bottom: 20px
+            margin-bottom: 2rem
+
+
+section#powerball-simulation
+    div.numbers
+        display: flex
+        margin-bottom: 2rem
+
+    input.number, div.number
+        width: 2.5rem
+        height: 2.5rem
+        padding: 0
+        border: 1px solid #eeeeee
+        border-radius: 4px
+        margin: 0 1rem 0 0
+        display: flex
+        align-items: center
+        justify-content: center
+        text-align: center
+        font-size: 1.2rem
+        color: #666666
+        font-weight: 600
+
+        &.powerball
+            border-radius: 50%
+
+
+        &.invalid
+            border-color: red
+        
+        &.match
+            border-color: Green
+            background-color: PaleGreen
+
+        @media (min-width: 40rem)
+            width: 4rem
+            height: 4rem
+
+    button
+        margin-bottom: 3rem
+        padding: 1.4rem 2rem
+        height: 0
+        letter-spacing: 0
+        line-height: 0
+
+    h3.prizes
+        margin-top: 3rem
+
+    div.speed
+        display: flex
+        flex-wrap: wrap
+
+        label
+            margin: 0 20px 0 0
+        
+        input
+            margin: 0 10px 0 0
+    
+    div.play
+        margin: 3rem 0
+
+        button
+            margin: .5rem 1rem 0 0

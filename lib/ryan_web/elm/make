@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+elm make ./src/Powerball.elm --output ../../../priv/static/js/powerball.js

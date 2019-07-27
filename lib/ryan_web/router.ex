@@ -23,6 +23,7 @@ defmodule RyanWeb.Router do
     live "/salary-seeker", SalarySeekerLive
     live "/domain-price", DomainPriceLive
     live "/inflation-calculator", InflationCalculatorLive
+    get "/powerball", PageController, :powerball
   end
 
   # Other scopes may use custom stacks.

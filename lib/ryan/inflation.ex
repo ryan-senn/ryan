@@ -87,7 +87,7 @@ defmodule Ryan.Inflation do
       |> Enum.slice(start_index..end_index)
 
     slice
-    |> Enum.scan(price, &calculate_year(&1, &2))
+    |> Enum.scan(price, &calculate_year/2)
     |> Enum.zip(slice)
   end
 

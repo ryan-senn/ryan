@@ -1,0 +1,9 @@
+<section id="powerball-simulation">
+    <div id="app"></div>
+</div>
+
+<script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/powerball.js") %>"></script>
+
+<script>
+    Elm.Powerball.init({node: document.getElementById("app")});
+</script>
