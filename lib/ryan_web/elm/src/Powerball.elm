@@ -285,7 +285,7 @@ view ({ selection, draw, spent, won, budget, hasClickedPlay, speed } as model) =
             [ text <| "Win/Loss: " ++ displayDollars (won - spent) ]
         , div
             []
-            [ text <| "Budget: " ++ displayDollars (budget - spent + won) ]
+            [ text <| "Balance: " ++ displayDollars (budget - spent + won) ]
         , h3
             [ class "prizes" ]
             [ text "Prizes (from Draw 1209, 18 July 2019)" ]
