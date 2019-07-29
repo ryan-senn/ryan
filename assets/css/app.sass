@@ -10,23 +10,60 @@ header
     border-bottom: 1px solid #eeeeee
     color: #666666
     background-color: #f6f9fc
-    padding: 10px 0
 
-    nav ul
+    nav
         display: flex
-        flex-wrap: wrap
-        list-style: none
-        margin: 0
 
-        li
-            padding: 0 10px
-            margin: 0
-        
-            &:first-child
-                padding-left: 0
+        a
+            margin: 1rem 2rem 1rem 0
+
+        ul
+            display: flex
+            flex-wrap: wrap
+            list-style: none
+            margin: 1rem 0
+
+            li
+                margin: 0
             
-            &:last-child
-                padding-right: 0
+                &:first-child
+                    padding-left: 0
+                
+                &:last-child
+                    padding-right: 0
+
+        @media (max-width: 40rem)
+            ul
+                display: none
+                position: absolute
+                transition: opacity 1s ease
+                right: 0
+                z-index: 10
+                flex-direction: column
+                top: 4.6rem
+                padding: 4rem
+                margin: 0
+                background-color: #f6f9fc
+                height: 100vh
+
+                li
+                    padding: 0 0 1rem 0
+
+            input#mobile-menu-checkbox:checked + ul
+                display: block
+
+        @media (max-width: 40rem)
+            justify-content: space-between
+            align-items: center
+
+        label
+            display: none
+
+            @media (max-width: 40rem)
+                display: block
+        
+        input#mobile-menu-checkbox
+            display: none
 
 main
     flex: 1
@@ -37,6 +74,14 @@ footer
     color: #666666
     background-color: #f6f9fc
     padding: 10px 0
+
+    div.container
+        display: flex
+        align-items: center
+
+        a
+            margin-left: 1rem
+            font-size: 3rem
 
 
 // page specific css, move out if it grows

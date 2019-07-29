@@ -7,14 +7,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ryan Senn</title>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>" />
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 </head>
 
 <body>
     <header>
         <div class="container">
             <nav>
+                <a href="<%= Routes.page_path(@conn, :index) %>">Home</a>
+                <label for="mobile-menu-checkbox">
+                    <span class="fa fa-bars"></span>
+                </label>
+                <input type="checkbox" id="mobile-menu-checkbox">
                 <ul>
-                    <li><a href="<%= Routes.page_path(@conn, :index) %>">Home</a></li>
                     <li><a href="<%= Routes.live_path(@conn, RyanWeb.SalarySeekerLive) %>">Salary Seeker</a></li>
                     <li><a href="<%= Routes.live_path(@conn, RyanWeb.DomainPriceLive) %>">Domain Price</a></li>
                     <li><a href="<%= Routes.live_path(@conn, RyanWeb.InflationCalculatorLive) %>">Inflation Calculator</a></li>
@@ -30,7 +35,7 @@
     </main>
     <footer>
         <div class="container">
-            Ryan Senn
+            <span>Ryan Senn</span> <a href="https://github.com/ryan-senn" target="blank_"><span class="fa fa-github"></span></a>
         </div>
     </footer>
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
