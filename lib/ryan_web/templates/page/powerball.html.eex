@@ -1,9 +1,13 @@
 <section id="powerball-simulation">
-    <div id="app"></div>
+    <div id="powerball-simulation-app"></div>
 </div>
 
-<script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/powerball.js") %>"></script>
+<%= if Mix.env() == :prod do %>
+    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/powerball.min.js") %>"></script>
+<% else %>
+    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/powerball.js") %>"></script>
+<% end %>
 
 <script>
-    Elm.Powerball.init({node: document.getElementById("app")});
+    Elm.Powerball.init({node: document.getElementById("powerball-simulation-app")});
 </script>

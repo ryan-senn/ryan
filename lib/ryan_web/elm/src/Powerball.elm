@@ -294,7 +294,7 @@ view ({ draw, spent, won, budget, hasClickedPlay, speed } as model) =
                 [ text "Pick your numbers" ]
             , button
                 [ onClick GenerateUserCombination ]
-                [ text "Pick for me" ]
+                [ text "Random" ]
             ]
         , if model.isPlaying then
             combinationView model.draw model.userCombination
@@ -307,26 +307,29 @@ view ({ draw, spent, won, budget, hasClickedPlay, speed } as model) =
         , combinationView model.userCombination model.draw
         , div
             [ class "speed" ]
-            [ label
+            [ p
+                []
+                [ text "Draws per second:" ]
+            , label
                 []
                 [ input
                     [ type_ "radio", onClick <| SetSpeed 1, checked <| speed == 1 ]
                     []
-                , text "1 draw per second"
+                , text "1"
                 ]
             , label
                 []
                 [ input
                     [ type_ "radio", onClick <| SetSpeed 10, checked <| speed == 10 ]
                     []
-                , text "10 draws per second"
+                , text "10"
                 ]
             , label
                 []
                 [ input
                     [ type_ "radio", onClick <| SetSpeed 100, checked <| speed == 100 ]
                     []
-                , text "100 draws per second"
+                , text "100"
                 ]
             ]
         , div
