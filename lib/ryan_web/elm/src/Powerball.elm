@@ -18,7 +18,7 @@ main =
         { init = always ( init, Cmd.none )
         , view = view
         , update = update
-        , subscriptions = subscriptions
+        , subscriptions = always Sub.none
         }
 
 
@@ -51,8 +51,9 @@ type NumberType
 
 
 type alias Model =
-    { selection : Selection
-    , draw : Maybe Draw
+    { userEntry : UserEntry
+    , userCombination : Maybe Combination
+    , draw : Maybe Combination
     , budget : Int
     , spent : Int
     , won : Int
@@ -64,7 +65,8 @@ type alias Model =
 
 init : Model
 init =
-    { selection = initialSelection
+    { userEntry = initialUserEntry
+    , userCombination = Nothing
     , draw = Nothing
     , budget = 0
     , spent = 0
@@ -75,20 +77,20 @@ init =
     }
 
 
-type alias Selection =
+type alias UserEntry =
     { numbers : Array String
     , powerball : String
     }
 
 
-initialSelection : Selection
-initialSelection =
+initialUserEntry : UserEntry
+initialUserEntry =
     { numbers = Array.repeat 7 ""
     , powerball = ""
     }
 
 
-type alias Draw =
+type alias Combination =
     { numbers : Set Int
     , powerball : Int
     }
@@ -97,54 +99,87 @@ type alias Draw =
 type Msg
     = UpdateNumber Int String
     | UpdatePowerball String
-    | RandomPick
-    | FillSelection Draw
+    | GenerateUserCombination
+    | FillUserCombination Combination
     | Play Int
-    | DelayRound
-    | RunRound Draw
+    | DelayRound Combination
+    | RunRound Combination Combination
     | SetSpeed Int
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update msg ({ selection } as model) =
+update msg ({ userEntry } as model) =
     case msg of
         UpdateNumber index value ->
-            ( { model | selection = { selection | numbers = Array.set index value selection.numbers } }, Cmd.none )
+            ( { model
+                | userEntry = { userEntry | numbers = Array.set index value userEntry.numbers }
+                , userCombination = Nothing
+              }
+            , Cmd.none
+            )
 
         UpdatePowerball value ->
-            ( { model | selection = { selection | powerball = value } }, Cmd.none )
+            ( { model
+                | userEntry = { userEntry | powerball = value }
+                , userCombination = Nothing
+              }
+            , Cmd.none
+            )
 
-        RandomPick ->
-            ( model, Random.generate FillSelection drawGenerator )
+        GenerateUserCombination ->
+            ( model, Random.generate FillUserCombination combinationGenerator )
 
-        FillSelection draw ->
-            ( { model | selection = drawToSelection draw }, Cmd.none )
+        FillUserCombination userCombination ->
+            ( { model
+                | userCombination = Just userCombination
+                , userEntry =
+                    UserEntry
+                        (userCombination.numbers |> Set.toList |> Array.fromList |> Array.map String.fromInt)
+                        (String.fromInt userCombination.powerball)
+              }
+            , Cmd.none
+            )
 
         Play budget ->
-            if isSelectionValid model.selection then
-                ( { model | hasClickedPlay = True, isPlaying = True, budget = model.budget + budget }
-                , if not model.isPlaying then
-                    Random.generate RunRound drawGenerator
+            let
+                userCombination =
+                    case model.userCombination of
+                        Just combination ->
+                            Just combination
 
-                  else
-                    Cmd.none
-                )
+                        Nothing ->
+                            validateUserEntry model.userEntry
+            in
+            case userCombination of
+                Just userCombination_ ->
+                    ( { model
+                        | userCombination = Just userCombination_
+                        , hasClickedPlay = True
+                        , isPlaying = True
+                        , budget = model.budget + budget
+                      }
+                    , if not model.isPlaying then
+                        Random.generate (RunRound userCombination_) combinationGenerator
 
-            else
-                ( { model | hasClickedPlay = True }, Cmd.none )
+                      else
+                        Cmd.none
+                    )
 
-        DelayRound ->
-            ( model, Random.generate RunRound drawGenerator )
+                Nothing ->
+                    ( { model | hasClickedPlay = True }, Cmd.none )
 
-        RunRound draw ->
-            runRound draw model
+        DelayRound userCombination ->
+            ( model, Random.generate (RunRound userCombination) combinationGenerator )
+
+        RunRound userCombination draw ->
+            runRound userCombination draw model
 
         SetSpeed speed ->
             ( { model | speed = speed }, Cmd.none )
 
 
-runRound : Draw -> Model -> ( Model, Cmd Msg )
-runRound draw model =
+runRound : Combination -> Combination -> Model -> ( Model, Cmd Msg )
+runRound userCombination draw model =
     if model.spent + costPerEntry - model.won > model.budget then
         ( { model | isPlaying = False }, Cmd.none )
 
@@ -152,24 +187,23 @@ runRound draw model =
         ( { model
             | draw = Just draw
             , spent = model.spent + costPerEntry
-            , won = model.won + prize model.selection draw
+            , won = model.won + prize userCombination draw
           }
         , Process.sleep (toFloat (1000 // model.speed))
-            |> Task.perform (always DelayRound)
+            |> Task.perform (always <| DelayRound userCombination)
         )
 
 
-prize : Selection -> Draw -> Int
-prize selection draw =
+prize : Combination -> Combination -> Int
+prize userCombination draw =
     let
         matchingNumbers_ =
-            draw
-                |> drawToSelection
-                |> matchingNumbers selection
-                |> List.length
+            userCombination.numbers
+                |> Set.intersect draw.numbers
+                |> Set.size
 
         matchingPowerball =
-            if selection.powerball == String.fromInt draw.powerball then
+            if userCombination.powerball == draw.powerball then
                 1
 
             else
@@ -181,22 +215,8 @@ prize selection draw =
         |> Maybe.withDefault 0
 
 
-matchingNumbers : Selection -> Selection -> List String
-matchingNumbers selection1 selection2 =
-    selection1.numbers
-        |> Array.toList
-        |> List.filter (\number -> List.member number (Array.toList selection2.numbers))
-
-
-drawToSelection : Draw -> Selection
-drawToSelection draw =
-    { numbers = draw.numbers |> Set.toList |> Array.fromList |> Array.map String.fromInt
-    , powerball = String.fromInt draw.powerball
-    }
-
-
-drawGenerator : Generator Draw
-drawGenerator =
+combinationGenerator : Generator Combination
+combinationGenerator =
     let
         numbers =
             Random.int 1 35
@@ -205,7 +225,7 @@ drawGenerator =
         powerball =
             Random.int 1 20
     in
-    Random.map2 Draw numbers powerball
+    Random.map2 Combination numbers powerball
 
 
 numbersGenerator : Set Int -> Int -> Generator (Set Int)
@@ -218,26 +238,73 @@ numbersGenerator set number =
         Random.constant (Set.insert number set)
 
 
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    Sub.none
+validateUserEntry : UserEntry -> Maybe Combination
+validateUserEntry userEntry =
+    let
+        validatedNumbers =
+            userEntry.numbers
+                |> Array.foldl validateUserEntryHelp Set.empty
+
+        validatedPowerball =
+            validateUserNumber Powerball userEntry.powerball
+    in
+    case ( Set.size validatedNumbers, validatedPowerball ) of
+        ( 7, Just powerball ) ->
+            Just <| Combination validatedNumbers powerball
+
+        _ ->
+            Nothing
+
+
+validateUserEntryHelp : String -> Set Int -> Set Int
+validateUserEntryHelp number set =
+    case validateUserNumber Regular number of
+        Just int ->
+            Set.insert int set
+
+        Nothing ->
+            set
+
+
+validateUserNumber : NumberType -> String -> Maybe Int
+validateUserNumber numberType number =
+    case String.toInt number of
+        Just int ->
+            if numberType == Regular && (int >= 1 || int <= 35) then
+                Just int
+
+            else if numberType == Powerball && (int >= 1 || int <= 20) then
+                Just int
+
+            else
+                Nothing
+
+        _ ->
+            Nothing
 
 
 view : Model -> Html Msg
-view ({ selection, draw, spent, won, budget, hasClickedPlay, speed } as model) =
+view ({ draw, spent, won, budget, hasClickedPlay, speed } as model) =
     div
         []
-        [ h3
-            []
-            [ text "Pick your numbers" ]
-        , selectionView model
-        , button
-            [ onClick RandomPick ]
-            [ text "Pick for me" ]
+        [ div
+            [ class "title-with-button" ]
+            [ h3
+                []
+                [ text "Pick your numbers" ]
+            , button
+                [ onClick GenerateUserCombination ]
+                [ text "Pick for me" ]
+            ]
+        , if model.isPlaying then
+            combinationView model.draw model.userCombination
+
+          else
+            userEntryView model
         , h3
             []
             [ text "Winning numbers" ]
-        , drawView model
+        , combinationView model.userCombination model.draw
         , div
             [ class "speed" ]
             [ label
@@ -271,49 +338,76 @@ view ({ selection, draw, spent, won, budget, hasClickedPlay, speed } as model) =
                 [ onClick <| Play 100000 ]
                 [ text "Throw in $1000" ]
             ]
-        , h3
-            []
-            [ text "Result" ]
-        , div
-            []
-            [ text <| "Spent: " ++ displayDollars spent ]
-        , div
-            []
-            [ text <| "Won: " ++ displayDollars won ]
-        , div
-            []
-            [ text <| "Win/Loss: " ++ displayDollars (won - spent) ]
-        , div
-            []
-            [ text <| "Balance: " ++ displayDollars (budget - spent + won) ]
+        , table
+            [ class "result" ]
+            [ tr
+                []
+                [ th
+                    []
+                    [ text "Spent" ]
+                , td
+                    []
+                    [ text <| displayDollars spent ]
+                ]
+            , tr
+                []
+                [ th
+                    []
+                    [ text "Won" ]
+                , td
+                    []
+                    [ text <| displayDollars won ]
+                ]
+            , tr
+                []
+                [ th
+                    []
+                    [ text "Win/Loss" ]
+                , td
+                    []
+                    [ text <| displayDollars (won - spent) ]
+                ]
+            , tr
+                []
+                [ th
+                    []
+                    [ text "Balance" ]
+                , td
+                    []
+                    [ text <| displayDollars (budget - spent + won) ]
+                ]
+            ]
         , h3
             [ class "prizes" ]
             [ text "Prizes (from Draw 1209, 18 July 2019)" ]
         , prizesView
+        , p
+            []
+            [ text "Inspired by: "
+            , a
+                [ href "https://www.reddit.com/r/AusFinance/comments/cgohom/lottery_calculator/", target "_blank" ]
+                [ text "https://www.reddit.com/r/AusFinance/comments/cgohom/lottery_calculator/" ]
+            ]
         ]
 
 
-selectionView : Model -> Html Msg
-selectionView { hasClickedPlay, selection, draw } =
+userEntryView : Model -> Html Msg
+userEntryView ({ userEntry, hasClickedPlay, isPlaying } as model) =
     div
         [ class "numbers" ]
-        ((selection.numbers
-            |> Array.indexedMap (\index value -> numberInput hasClickedPlay draw Regular (UpdateNumber index) value)
+        ((userEntry.numbers
+            |> Array.indexedMap
+                (\index value ->
+                    numberInput model Regular (UpdateNumber index) value
+                )
             |> Array.toList
          )
-            ++ [ numberInput hasClickedPlay draw Powerball UpdatePowerball selection.powerball ]
+            ++ [ numberInput model Powerball UpdatePowerball userEntry.powerball ]
         )
 
 
-numberInput : Bool -> Maybe Draw -> NumberType -> (String -> Msg) -> String -> Html Msg
-numberInput hasClickedPlay mDraw numberType msg value_ =
-    let
-        powerballMatch =
-            numberType == Powerball && Maybe.map (.powerball >> String.fromInt) mDraw == Just value_
-
-        numberMatch =
-            numberType == Regular && (Maybe.map (.numbers >> Set.toList >> List.map String.fromInt >> List.member value_) mDraw |> Maybe.withDefault False)
-    in
+numberInput : Model -> NumberType -> (String -> Msg) -> String -> Html Msg
+numberInput model numberType msg value_ =
     input
         [ type_ "text"
         , onInput msg
@@ -322,58 +416,45 @@ numberInput hasClickedPlay mDraw numberType msg value_ =
         , class "number"
         , classList
             [ ( "powerball", numberType == Powerball )
-            , ( "invalid", isInvalid numberType value_ && hasClickedPlay )
-            , ( "match", powerballMatch || numberMatch )
+            , ( "invalid", validateUserNumber numberType value_ == Nothing && model.hasClickedPlay )
             ]
         ]
         []
 
 
-drawView : Model -> Html Msg
-drawView { selection, draw, hasClickedPlay } =
-    case draw of
-        Just draw_ ->
+combinationView : Maybe Combination -> Maybe Combination -> Html Msg
+combinationView combination1 combination2 =
+    case ( combination1, combination2 ) of
+        ( Just combination1_, Just combination2_ ) ->
             div
                 [ class "numbers" ]
-                ((draw_.numbers
+                ((combination2_.numbers
                     |> Set.toList
-                    |> List.map String.fromInt
-                    |> List.map (drawNumber hasClickedPlay selection Regular)
+                    |> List.map (\number -> combinationNumber (Set.member number combination1_.numbers) Regular (Just number))
                  )
-                    ++ [ drawNumber hasClickedPlay selection Powerball (String.fromInt draw_.powerball) ]
+                    ++ [ combinationNumber (combination1_.powerball == combination2_.powerball) Powerball (Just combination2_.powerball) ]
                 )
 
-        Nothing ->
+        _ ->
             div
                 [ class "numbers" ]
-                ((List.repeat 7 ""
-                    |> List.map (drawNumber hasClickedPlay selection Regular)
+                ((List.repeat 7 Nothing
+                    |> List.map (combinationNumber False Regular)
                  )
-                    ++ [ drawNumber hasClickedPlay selection Powerball "" ]
+                    ++ [ combinationNumber False Powerball Nothing ]
                 )
 
 
-drawNumber : Bool -> Selection -> NumberType -> String -> Html Msg
-drawNumber hasClickedPlay selection numberType value =
+combinationNumber : Bool -> NumberType -> Maybe Int -> Html Msg
+combinationNumber isMatch numberType mNumber =
     div
         [ class "number"
         , classList
             [ ( "powerball", numberType == Powerball )
-            , ( "match"
-              , if not hasClickedPlay || not (isSelectionValid selection) then
-                    False
-
-                else if numberType == Powerball then
-                    selection.powerball == value
-
-                else
-                    selection.numbers
-                        |> Array.toList
-                        |> List.member value
-              )
+            , ( "match", isMatch )
             ]
         ]
-        [ text value ]
+        [ text (mNumber |> Maybe.map String.fromInt |> Maybe.withDefault "") ]
 
 
 prizesView : Html Msg
@@ -438,31 +519,3 @@ displayDollars cents =
 
     else
         "$" ++ dollars
-
-
-isSelectionValid : Selection -> Bool
-isSelectionValid selection =
-    let
-        areNumbersValid =
-            selection.numbers
-                |> Array.filter (isInvalid Regular)
-                |> Array.length
-                |> (==) 0
-
-        isPowerballValid =
-            selection.powerball
-                |> isInvalid Powerball
-                |> not
-    in
-    areNumbersValid && isPowerballValid
-
-
-isInvalid : NumberType -> String -> Bool
-isInvalid numberType number =
-    case String.toInt number of
-        Just int ->
-            (numberType == Powerball && (int < 1 || int > 20))
-                || (numberType == Regular && (int < 1 || int > 35))
-
-        Nothing ->
-            True
