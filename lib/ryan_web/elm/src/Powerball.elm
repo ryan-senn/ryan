@@ -270,10 +270,10 @@ validateUserNumber : NumberType -> String -> Maybe Int
 validateUserNumber numberType number =
     case String.toInt number of
         Just int ->
-            if numberType == Regular && (int >= 1 || int <= 35) then
+            if numberType == Regular && int >= 1 && int <= 35 then
                 Just int
 
-            else if numberType == Powerball && (int >= 1 || int <= 20) then
+            else if numberType == Powerball && int >= 1 && int <= 20 then
                 Just int
 
             else
@@ -419,11 +419,26 @@ numberInput model numberType msg value_ =
         , class "number"
         , classList
             [ ( "powerball", numberType == Powerball )
-            , ( "invalid", validateUserNumber numberType value_ == Nothing && model.hasClickedPlay )
+            , ( "invalid", isNumberInputInvalid model numberType value_ && model.hasClickedPlay )
             ]
         ]
         []
 
+
+isNumberInputInvalid : Model -> NumberType -> String -> Bool
+isNumberInputInvalid model numberType value =
+    case (numberType, validateUserNumber numberType value) of
+        (Regular, Just _) ->
+            model.userEntry.numbers
+                |> Array.filter ((==) value)
+                |> Array.length
+                |> (<) 1
+
+        (Powerball, Just _) ->
+            False
+
+        _ ->
+            True
 
 combinationView : Maybe Combination -> Maybe Combination -> Html Msg
 combinationView combination1 combination2 =
