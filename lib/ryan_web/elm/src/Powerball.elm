@@ -388,7 +388,7 @@ view ({ draw, spent, won, budget, hasClickedPlay, speed } as model) =
             []
             [ text "Inspired by: "
             , a
-                [ href "https://www.reddit.com/r/AusFinance/comments/cgohom/lottery_calculator/", target "_blank" ]
+                [ class "url", href "https://www.reddit.com/r/AusFinance/comments/cgohom/lottery_calculator/", target "_blank" ]
                 [ text "https://www.reddit.com/r/AusFinance/comments/cgohom/lottery_calculator/" ]
             ]
         ]
