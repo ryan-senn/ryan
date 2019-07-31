@@ -6,6 +6,7 @@ import Dict exposing (Dict)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Html.Lazy exposing (..)
 import Process
 import Random exposing (Generator)
 import Set exposing (Set)
@@ -57,6 +58,8 @@ type alias Model =
     , budget : Int
     , spent : Int
     , won : Int
+    , winningDraws : List ( Combination, Combination )
+    , showWinningDraws : Bool
     , hasClickedPlay : Bool
     , isPlaying : Bool
     , speed : Int
@@ -71,6 +74,8 @@ init =
     , budget = 0
     , spent = 0
     , won = 0
+    , winningDraws = []
+    , showWinningDraws = False
     , hasClickedPlay = False
     , isPlaying = False
     , speed = 10
@@ -105,6 +110,7 @@ type Msg
     | DelayRound Combination
     | RunRound Combination Combination
     | SetSpeed Int
+    | ToggleWinningDraws
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -177,17 +183,30 @@ update msg ({ userEntry } as model) =
         SetSpeed speed ->
             ( { model | speed = speed }, Cmd.none )
 
+        ToggleWinningDraws ->
+            ( { model | showWinningDraws = not model.showWinningDraws }, Cmd.none )
+
 
 runRound : Combination -> Combination -> Model -> ( Model, Cmd Msg )
 runRound userCombination draw model =
     if model.spent + costPerEntry - model.won > model.budget then
-        ( { model | isPlaying = False }, Cmd.none )
+        ( { model | isPlaying = False, draw = Nothing }, Cmd.none )
 
     else
+        let
+            won =
+                prize userCombination draw
+        in
         ( { model
             | draw = Just draw
             , spent = model.spent + costPerEntry
-            , won = model.won + prize userCombination draw
+            , won = model.won + won
+            , winningDraws =
+                if won > 0 then
+                    ( userCombination, draw ) :: model.winningDraws
+
+                else
+                    model.winningDraws
           }
         , Process.sleep (toFloat (1000 // model.speed))
             |> Task.perform (always <| DelayRound userCombination)
@@ -380,6 +399,7 @@ view ({ draw, spent, won, budget, hasClickedPlay, speed } as model) =
                     [ text <| displayDollars (budget - spent + won) ]
                 ]
             ]
+        , lazy2 winningDrawsView model.showWinningDraws model.winningDraws
         , h3
             [ class "prizes" ]
             [ text "Prizes (from Draw 1209, 18 July 2019)" ]
@@ -420,6 +440,7 @@ numberInput model numberType msg value_ =
         , classList
             [ ( "powerball", numberType == Powerball )
             , ( "invalid", isNumberInputInvalid model numberType value_ && model.hasClickedPlay )
+            , ( "playing", model.isPlaying )
             ]
         ]
         []
@@ -427,18 +448,19 @@ numberInput model numberType msg value_ =
 
 isNumberInputInvalid : Model -> NumberType -> String -> Bool
 isNumberInputInvalid model numberType value =
-    case (numberType, validateUserNumber numberType value) of
-        (Regular, Just _) ->
+    case ( numberType, validateUserNumber numberType value ) of
+        ( Regular, Just _ ) ->
             model.userEntry.numbers
                 |> Array.filter ((==) value)
                 |> Array.length
                 |> (<) 1
 
-        (Powerball, Just _) ->
+        ( Powerball, Just _ ) ->
             False
 
         _ ->
             True
+
 
 combinationView : Maybe Combination -> Maybe Combination -> Html Msg
 combinationView combination1 combination2 =
@@ -523,6 +545,36 @@ prizeRow ( ( matchingNumbers_, matchingPowerball ), ( prize_, odds ) ) =
         , td
             []
             [ text <| displayDollars prize_ ]
+        ]
+
+
+winningDrawsView : Bool -> List ( Combination, Combination ) -> Html Msg
+winningDrawsView isShown winningDraws =
+    div
+        [ class "winning-draws" ]
+        [ button
+            [ class "button button-clear"
+            , disabled <| winningDraws == []
+            , onClick ToggleWinningDraws
+            ]
+            [ text "Show winning draws "
+            , span
+                [ class <|
+                    if isShown then
+                        "fa fa-arrow-up"
+
+                    else
+                        "fa fa-arrow-down"
+                ]
+                []
+            ]
+        , if isShown then
+            div
+                []
+                (List.map (\( userCombination, draw ) -> combinationView (Just userCombination) (Just draw)) winningDraws)
+
+          else
+            text ""
         ]
 
 

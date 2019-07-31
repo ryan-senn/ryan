@@ -126,10 +126,10 @@ section#powerball-simulation
         font-size: 1.2rem
         color: #666666
         font-weight: 600
-
+        background-color: #eeeeee
+    
         &.powerball
             border-radius: 50%
-
 
         &.invalid
             border-color: red
@@ -142,12 +142,24 @@ section#powerball-simulation
             width: 4rem
             height: 4rem
 
+    input.number:not(.playing)
+        background-color: #ffffff
+
     button
         margin-bottom: 3rem
         padding: 1.2rem 1.6rem
         height: 0
         letter-spacing: 0
         line-height: 0
+
+    td, th
+        padding: .6rem 1.2rem
+
+        &:first-child
+            padding-left: 0
+        
+        &:last-child
+            padding-right: 0
 
     h3.prizes
         margin-top: 3rem
@@ -170,15 +182,6 @@ section#powerball-simulation
         button
             margin: .5rem 1rem 0 0
     
-    td, th
-        padding: .6rem 1.2rem
-
-        &:first-child
-            padding-left: 0
-        
-        &:last-child
-            padding-right: 0
-    
     table.result
         tr
             display: flex
@@ -188,3 +191,13 @@ section#powerball-simulation
             
             td
                 flex-basis: 15rem
+        
+        margin-bottom: 1rem
+
+    div.winning-draws
+        button
+            margin-bottom: 0
+            padding: 0
+        
+        > div
+            margin-top: 2rem
