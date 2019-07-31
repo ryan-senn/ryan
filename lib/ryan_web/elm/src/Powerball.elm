@@ -551,9 +551,9 @@ prizeRow ( ( matchingNumbers_, matchingPowerball ), ( prize_, odds ) ) =
 winningDrawsView : Bool -> List ( Combination, Combination ) -> Html Msg
 winningDrawsView isShown winningDraws =
     div
-        [ class "winning-draws" ]
+        [ class ""]
         [ button
-            [ class "button button-clear"
+            [ class " button button-clear"
             , disabled <| winningDraws == []
             , onClick ToggleWinningDraws
             ]
