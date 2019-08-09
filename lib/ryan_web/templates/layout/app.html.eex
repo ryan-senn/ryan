@@ -30,11 +30,31 @@
                 </label>
                 <input type="checkbox" id="mobile-menu-checkbox">
                 <ul>
-                    <li><a href="<%= Routes.live_path(@conn, RyanWeb.SalarySeekerLive) %>">Salary Seeker</a></li>
-                    <li><a href="<%= Routes.live_path(@conn, RyanWeb.DomainPriceLive) %>">Domain Price</a></li>
-                    <li><a href="<%= Routes.live_path(@conn, RyanWeb.InflationCalculatorLive) %>">Inflation
-                            Calculator</a></li>
-                    <li><a href="<%= Routes.page_path(@conn, :powerball) %>">Powerball Simulation</a></li>
+                    <li>
+                        <a href="<%= Routes.live_path(@conn, RyanWeb.SalarySeekerLive) %>">
+                            Salary Seeker
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<%= Routes.live_path(@conn, RyanWeb.DomainPriceLive) %>">
+                            Domain Price
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<%= Routes.live_path(@conn, RyanWeb.InflationCalculatorLive) %>">
+                            Inflation Calculator
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<%= Routes.page_path(@conn, :powerball) %>">
+                            Powerball Simulation
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<%= Routes.page_path(@conn, :asx200) %>">
+                            ASX 200 Chart
+                        </a>
+                    </li>
                 </ul>
             </nav>
         </div>

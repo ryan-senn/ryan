@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-chokidar "./src/**/*.elm" -c "elm make ./src/Powerball.elm --output ../../../priv/static/js/powerball.js --debug" --initial
+chokidar "./src/**/*.elm" -c "elm make ./src/Powerball.elm --output ../../../priv/static/js/powerball.js --debug; elm make ./src/Asx200.elm --output ../../../priv/static/js/asx200.js --debug" --initial

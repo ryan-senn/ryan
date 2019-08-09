@@ -1,1 +1,29 @@
-<p>Random things built by me</p>
+<section id="home">
+    <h1>Ryan Senn</h1>
+    <p>Random things built by me in Elixir and Elm, mainly Australian finance related.</p>
+    <h2>Salary Seeker</h2>
+    <p>Some listing don't show the salary range. This Script will continuously apply salary filters for a job, until you are left with the range configured by the advertiser.</p>
+    <a href="<%= Routes.live_path(@conn, RyanWeb.SalarySeekerLive) %>">
+        Salary Seeker
+    </a>
+    <h2>Domain price finder</h2>
+    <p>Similar to Salary Seeker, but this tool work with Domain listings.</p>
+    <a href="<%= Routes.live_path(@conn, RyanWeb.DomainPriceLive) %>">
+        Domain Price
+    </a>
+    <h2>Inflation Calculator</h2>
+    <p>You enter a amount of dollars and a starting year, and it will show a table with inflation adjusted prices. I like to look at the history of sold houses, so I built this calculator to see how much they spent in inflation adjusted prices. That house that sold for $72,000 in 1983, how good of a deal was it really?</p>
+    <a href="<%= Routes.live_path(@conn, RyanWeb.InflationCalculatorLive) %>">
+        Inflation Claculator
+    </a>
+    <h2>Powerball Simulation</h2>
+    <p>Feeling lucky? Simulate playing the Australian Powerball with as much money and as many draws as you want!</p>
+    <a href="<%= Routes.page_path(@conn, :powerball) %>">
+        Powerball Simulation
+    </a>
+    <h2>ASX 200 daily Chart</h2>
+    <p>Visualise the returns of every single day of the ASX 200 since year 2000.</p>
+    <a href="<%= Routes.page_path(@conn, :asx200) %>">
+        ASX 200 Chart
+    </a>
+</section>
