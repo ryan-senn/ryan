@@ -241,9 +241,11 @@ section#asx200
             top: 50px
             border-right: 1px dashed #eeeeee
 
-            &.line
-                border-left: 1px dashed #eeeeee
-                border-color: #cccccc
+            &:nth-child(10n)
+                border-right: 1px dashed #cccccc
+
+            &:nth-child(10n + 1)
+                border-right: 1px dashed #cccccc
         
             div.dots
                 display: flex

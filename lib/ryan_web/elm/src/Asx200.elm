@@ -147,7 +147,7 @@ groupView diff rows =
                 |> String.fromInt
     in
     div
-        [ class "group", style "left" (left ++ "px"), classList [ ( "line", modBy 10 diff == 0 ) ] ]
+        [ class "group", style "left" (left ++ "px") ]
         [ div
             [ class "dots" ]
             (List.map rowView rows)
