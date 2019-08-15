@@ -1,7 +1,7 @@
 <section id="daily-chart">
     <h1>Historical daily charts</h1>
     <p>These charts show the historical daily swings. Data is taken from Yahoo Finance. Last updated 14 August 2019.</p>
-    <p>It's a simple way to view things in perspective when the media reports "meltdowns", "bloodbathes" and "the stock
+    <p>It's a simple way to view things in perspective when the media reports "meltdowns", "bloodbathes" or "the stock
         market soaring".</p>
     <ul class="charts">
         <li>
@@ -30,26 +30,27 @@
         </li>
     </ul>
     <div id="daily-chart-app"></div>
-    </div>
+</section>
 
-    <%= if @data != nil do %>
+<%= if @data != nil do %>
 
-    <%= if Mix.env() == :prod do %>
-    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/daily-chart.min.js") %>"></script>
-    <% else %>
-    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/daily-chart.js") %>"></script>
-    <% end %>
+<%= if Mix.env() == :prod do %>
+<script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/daily-chart.min.js") %>"></script>
+<% else %>
+<script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/daily-chart.js") %>"></script>
+<% end %>
 
-    <script src="https://unpkg.com/popper.js@1"></script>
-    <script src="https://unpkg.com/tippy.js@4"></script>
+<script src="https://unpkg.com/popper.js@1"></script>
+<script src="https://unpkg.com/tippy.js@4"></script>
 
-    <script>
-        Elm.DailyChart.init({ node: document.getElementById("daily-chart-app"), flags: { data: <%= raw(@data) %>}});
+<script>
+    Elm.DailyChart.init({ node: document.getElementById("daily-chart-app"), flags: { data: <%= raw(@data) %>}});
 
-        tippy(".dot", {
-            content: function (node) {
-                return node.children[0].innerHTML
-            }
-        })
-    </script>
-    <% end %>
+    tippy(".dot", {
+        content: function (node) {
+            return node.children[0].innerHTML
+        },
+        duration: [100, 100]
+    })
+</script>
+<% end %>

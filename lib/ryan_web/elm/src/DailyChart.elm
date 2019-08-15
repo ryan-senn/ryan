@@ -15,6 +15,11 @@ percentRange =
     30
 
 
+dotSize : Int
+dotSize =
+    4
+
+
 main : Program Flags Model Msg
 main =
     Browser.element
@@ -126,11 +131,11 @@ groupView model diff rows =
     let
         left =
             diff
-                |> (*) 10
+                |> (*) (dotSize + 1)
                 |> String.fromInt
     in
     div
-        [ class "group", style "left" (left ++ "px"), height <| model.maxRows - 5 ]
+        [ class "group", style "left" (left ++ "px"), height <| (model.maxRows - 8) ]
         [ div
             [ class "dots" ]
             (List.map rowView rows)
@@ -185,4 +190,4 @@ percent offset precision int =
 
 height : Int -> Attribute Msg
 height maxRows_ =
-    style "height" <| String.fromInt ((maxRows_ + 7) * 9) ++ "px"
+    style "height" <| String.fromInt ((maxRows_ + 12) * (dotSize + 1)) ++ "px"
