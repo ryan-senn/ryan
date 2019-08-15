@@ -1,0 +1,55 @@
+<section id="daily-chart">
+    <h1>Historical daily charts</h1>
+    <p>These charts show the historical daily swings. Data is taken from Yahoo Finance. Last updated 14 August 2019.</p>
+    <p>It's a simple way to view things in perspective when the media reports "meltdowns", "bloodbathes" and "the stock
+        market soaring".</p>
+    <ul class="charts">
+        <li>
+            <ul>
+                <li><a href="<%= Routes.page_path(@conn, :daily_chart, "asx200") %>">ASX 200 daily</a></li>
+                <li><a href="<%= Routes.page_path(@conn, :daily_chart, "asx200-weekly") %>">ASX 200 weekly</a></li>
+            </ul>
+        </li>
+        <li>
+            <ul>
+                <li><a href="<%= Routes.page_path(@conn, :daily_chart, "sp500") %>">S&P 500 daily</a></li>
+                <li><a href="<%= Routes.page_path(@conn, :daily_chart, "sp500-weekly") %>">S&P 500 weekly</a></li>
+            </ul>
+        </li>
+        <li>
+            <ul>
+                <li><a href="<%= Routes.page_path(@conn, :daily_chart, "nasdaq") %>">NASDAQ daily</a></li>
+                <li><a href="<%= Routes.page_path(@conn, :daily_chart, "nasdaq-weekly") %>">NASDAQ weekly</a></li>
+            </ul>
+        </li>
+        <li>
+            <ul>
+                <li><a href="<%= Routes.page_path(@conn, :daily_chart, "dow") %>">Dow Jones daily</a></li>
+                <li><a href="<%= Routes.page_path(@conn, :daily_chart, "dow-weekly") %>">Dow Jones weekly</a></li>
+            </ul>
+        </li>
+    </ul>
+    <div id="daily-chart-app"></div>
+    </div>
+
+    <%= if @data != nil do %>
+
+    <%= if Mix.env() == :prod do %>
+    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/daily-chart.min.js") %>"></script>
+    <% else %>
+    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/daily-chart.js") %>"></script>
+    <% end %>
+
+    <script src="https://unpkg.com/popper.js@1"></script>
+    <script src="https://unpkg.com/tippy.js@4"></script>
+
+    <script>
+        Elm.DailyChart.init({ node: document.getElementById("daily-chart-app"), flags: { data: <%= raw(@data) %>}});
+
+        tippy(".dot", {
+            content: function (node) {
+                return node.children[0].innerHTML
+            }
+        })
+    </script>
+    <% end %>

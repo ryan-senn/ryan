@@ -1,4 +1,4 @@
-module Asx200 exposing (main)
+module DailyChart exposing (main)
 
 import Browser
 import Browser.Dom as Dom
@@ -8,6 +8,11 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Round
 import Task
+
+
+percentRange : Int
+percentRange =
+    30
 
 
 main : Program Flags Model Msg
@@ -27,7 +32,7 @@ type alias Flags =
 
 type alias Model =
     { groups : Dict Int (List Row)
-    , highlighted : Maybe Row
+    , maxRows : Int
     }
 
 
@@ -35,12 +40,18 @@ init : Flags -> ( Model, Cmd Msg )
 init flags =
     let
         initialDict =
-            List.range 0 2000
+            List.range 0 (percentRange * 200)
                 |> List.map (\i -> ( i, [] ))
                 |> Dict.fromList
+
+        groups =
+            List.foldl populateDict initialDict flags.data
+
+        maxRows_ =
+            Dict.foldl maxRows 0 groups
     in
-    ( { groups = List.foldl populateDict initialDict flags.data
-      , highlighted = Nothing
+    ( { groups = groups
+      , maxRows = maxRows_
       }
     , Dom.getViewportOf "chart"
         |> Task.andThen (\viewport -> Dom.setViewportOf "chart" (viewport.scene.width / 2 - viewport.viewport.width / 2) 0)
@@ -52,9 +63,22 @@ populateDict : Row -> Dict Int (List Row) -> Dict Int (List Row)
 populateDict row acc =
     let
         group =
-            row.diff + 1000
+            row.diff + (percentRange * 100)
     in
     Dict.insert group (row :: (Dict.get group acc |> Maybe.withDefault [])) acc
+
+
+maxRows : Int -> List Row -> Int -> Int
+maxRows _ rows acc =
+    let
+        lenght =
+            List.length rows
+    in
+    if lenght > acc then
+        lenght
+
+    else
+        acc
 
 
 type alias Row =
@@ -67,37 +91,25 @@ type alias Row =
 
 type Msg
     = NoOp
-    | Highlight Row
-    | Hide
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        NoOp ->
-            ( model, Cmd.none )
-
-        Highlight row ->
-            ( { model | highlighted = Just row }, Cmd.none )
-
-        Hide ->
-            ( { model | highlighted = Nothing }, Cmd.none )
+    ( model, Cmd.none )
 
 
 view : Model -> Html Msg
 view model =
     div
         []
-        [ highlightView model.highlighted
-        , div
-            [ id "chart" ]
-            (Dict.map groupView model.groups |> Dict.values)
-        , p
-            []
-            [ text "Data taken from: "
-            , a
-                [ class "url", href "https://au.finance.yahoo.com/quote/%5EAXJO/history?period1=713196000&period2=1565186400&interval=1d&filter=history&frequency=1d", target "_blank" ]
-                [ text "https://au.finance.yahoo.com/quote/%5EAXJO/history?period1=713196000&period2=1565186400&interval=1d&filter=history&frequency=1d" ]
+        [ div
+            [ class "chart-placeholder", height model.maxRows]
+            [ div
+                [ class "chart-container", height model.maxRows ]
+                [ div
+                    [ id "chart", height model.maxRows ]
+                    (Dict.map (groupView model) model.groups |> Dict.values)
+                ]
             ]
         , p
             []
@@ -109,37 +121,8 @@ view model =
         ]
 
 
-highlightView : Maybe Row -> Html Msg
-highlightView mRow =
-    case mRow of
-        Just row ->
-            div
-                [ class "highlight" ]
-                [ ul
-                    []
-                    [ li
-                        []
-                        [ text <| "Date: " ++ row.date ]
-                    , li
-                        []
-                        [ text <| "Open: " ++ Round.round 2 row.open ]
-                    , li
-                        []
-                        [ text <| "Close: " ++ Round.round 2 row.close ]
-                    , li
-                        []
-                        [ text <| "Change: " ++ percent 0 2 row.diff ]
-                    ]
-                ]
-
-        Nothing ->
-            div
-                [ class "highlight" ]
-                [ text "Hover/Click dot to show info" ]
-
-
-groupView : Int -> List Row -> Html Msg
-groupView diff rows =
+groupView : Model -> Int -> List Row -> Html Msg
+groupView model diff rows =
     let
         left =
             diff
@@ -147,7 +130,7 @@ groupView diff rows =
                 |> String.fromInt
     in
     div
-        [ class "group", style "left" (left ++ "px") ]
+        [ class "group", style "left" (left ++ "px"), height <| model.maxRows - 5 ]
         [ div
             [ class "dots" ]
             (List.map rowView rows)
@@ -160,7 +143,7 @@ groupView diff rows =
 label : Int -> String
 label diff =
     if modBy 10 diff == 0 then
-        percent 1000 1 diff
+        percent (percentRange * 100) 1 diff
 
     else
         ""
@@ -169,11 +152,26 @@ label diff =
 rowView : Row -> Html Msg
 rowView row =
     div
-        [ class "dot"
-        , onMouseEnter <| Highlight row
-        , onMouseLeave Hide
+        [ class "dot" ]
+        [ div
+            [ class "info" ]
+            [ ul
+                []
+                [ li
+                    []
+                    [ text <| "Date: " ++ row.date ]
+                , li
+                    []
+                    [ text <| "Open: " ++ Round.round 2 row.open ]
+                , li
+                    []
+                    [ text <| "Close: " ++ Round.round 2 row.close ]
+                , li
+                    []
+                    [ text <| "Change: " ++ percent 0 2 row.diff ]
+                ]
+            ]
         ]
-        []
 
 
 percent : Int -> Int -> Int -> String
@@ -183,3 +181,8 @@ percent offset precision int =
         |> Round.round precision
     )
         ++ "%"
+
+
+height : Int -> Attribute Msg
+height maxRows_ =
+    style "height" <| String.fromInt ((maxRows_ + 7) * 9) ++ "px"

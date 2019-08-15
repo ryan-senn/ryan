@@ -73,6 +73,9 @@ main
     a.url
         word-wrap: break-word
 
+    div.container
+        position: initial
+
 footer
     border-top: 1px solid #eeeeee
     color: #666666
@@ -205,63 +208,98 @@ section#powerball-simulation
 
     div.winning-draws
         button
-            margin-bottom: 0
+            margin-bottom: 4rem
             padding: 0
-        
-        > div
-            margin-top: 2rem
+    
+        div.winning-draw
+            display: flex
+            flex-wrap: wrap-reverse
 
+            > div:first-child
+                margin-right: 1rem
 
-section#asx200
+            > div:last-child
+                padding-top: 0.5rem
+                margin-bottom: 0.5rem
 
-    div.highlight
-        position: absolute
-        z-index: 10
-        background-color: #ffffff
-        border: 1px solid #cccccc
-        padding: 1rem 2rem
-        right: 20px
+section#daily-chart
+    ul.charts
+        display: flex
+        padding: 0
+        padding: 0
+        margin: 0
+        list-style: none
 
-        ul
-            margin: 0
+        li
+            margin: 0 1rem
 
-            li
-                margin: 0
+            ul
+                padding: 0
+                margin: 0 0 3rem 0
 
-    div#chart
-        position: relative
-        overflow-x: scroll
-        height: 500px
-        margin-bottom: 3rem
+    div.chart-placeholder
+        margin-bottom: 2rem
 
-        div.group
+        div.chart-container
             position: absolute
-            height: calc(100% - 100px)
-            width: 10px
-            top: 50px
-            border-right: 1px dashed #eeeeee
-
-            &:nth-child(10n)
-                border-right: 1px dashed #cccccc
-
-            &:nth-child(10n + 1)
-                border-right: 1px dashed #cccccc
-        
-            div.dots
-                display: flex
-                flex-direction: column
-                align-items: center
-                justify-content: center
-                height: 100%
-        
-                div.dot
-                    height: 8px
-                    width: 8px
-                    border: 1px solid #666666
-                    border-radius: 50%
-                    margin-bottom: 1px
+            left: 0
+            right: 0
+            width: calc(100% - 4rem)
+            margin: 0 auto 3rem auto
             
-            div.percent
-                display: flex
-                align-items: center
-                justify-content: center
+            div#chart
+                position: relative
+                overflow-x: scroll
+                width: 100%
+
+                div.group
+                    position: absolute
+                    width: 10px
+                    top: 0
+                    border-right: 1px dashed #eeeeee
+
+                    &:nth-child(10n)
+                        border-right: 1px dashed #cccccc
+
+                    &:nth-child(10n + 1)
+                        border-right: 1px dashed #cccccc
+                
+                    div.dots
+                        display: flex
+                        flex-direction: column
+                        justify-content: center
+                        height: 100%
+                
+                        div.dot
+                            height: 8px
+                            width: 8px
+                            border: 1px solid #666666
+                            border-radius: 50%
+                            margin-bottom: 1px
+                            position: relative
+                            background-color: #cccccc
+
+                            &:hover
+                                border-color: #000000
+                                background-color: #666666
+                    
+                            div.info
+                                display: none
+
+                    div.percent
+                        display: flex
+                        align-items: center
+                        justify-content: center
+
+div.tippy-popper
+    div.tippy-tooltip
+        padding: 1.5rem
+        font-size: 1.4rem
+
+        div.tippy-content
+            ul
+                margin: 0
+                padding: 0
+                list-style: none
+                letter-spacing: 1px
+            

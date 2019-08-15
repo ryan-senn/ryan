@@ -75,7 +75,7 @@ init =
     , spent = 0
     , won = 0
     , winningDraws = []
-    , showWinningDraws = False
+    , showWinningDraws = True
     , hasClickedPlay = False
     , isPlaying = False
     , speed = 10
@@ -551,13 +551,12 @@ prizeRow ( ( matchingNumbers_, matchingPowerball ), ( prize_, odds ) ) =
 winningDrawsView : Bool -> List ( Combination, Combination ) -> Html Msg
 winningDrawsView isShown winningDraws =
     div
-        [ class ""]
+        [ class "winning-draws" ]
         [ button
-            [ class " button button-clear"
-            , disabled <| winningDraws == []
+            [ class "button button-clear"
             , onClick ToggleWinningDraws
             ]
-            [ text "Show winning draws "
+            [ text <| if isShown then "Hide winning draws " else "Show winning draws "
             , span
                 [ class <|
                     if isShown then
@@ -571,10 +570,22 @@ winningDrawsView isShown winningDraws =
         , if isShown then
             div
                 []
-                (List.map (\( userCombination, draw ) -> combinationView (Just userCombination) (Just draw)) winningDraws)
+                (List.map winningDrawView winningDraws)
 
           else
             text ""
+        ]
+
+
+
+winningDrawView : (Combination, Combination) -> Html Msg
+winningDrawView (userCombination, draw) =
+    div
+        [ class "winning-draw" ]
+        [ combinationView (Just userCombination) (Just draw)
+        , div
+            []
+            [ text <| "+ " ++ (prize userCombination draw |> displayDollars) ]
         ]
 
 
