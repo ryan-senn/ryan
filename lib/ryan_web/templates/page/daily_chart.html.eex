@@ -3,6 +3,8 @@
     <p>These charts show the historical daily swings. Data is taken from Yahoo Finance. Last updated 14 August 2019.</p>
     <p>It's a simple way to view things in perspective when the media reports "meltdowns", "bloodbathes" or "the stock
         market soaring".</p>
+    <p>You can hover (or click on mobile) each data point to see some information like the date, open, close and % change</p>
+    <p>The charts are not great on mobile, they take a while to load (~10s on my phone) and the data points are tricky to click on. Better seen on desktop or laptop.</p>
     <ul class="charts">
         <li>
             <ul>
