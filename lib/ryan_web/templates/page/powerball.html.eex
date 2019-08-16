@@ -1,8 +1,8 @@
 <section id="powerball-simulation">
     <h1>Australian Powerball Simulation</h1>
     <p>Think you're lucky? Simulate playing the Australian Powerball to find out!</p>
-    <p>The rules are simple: pick 7 unique numbers between 1 and 35, and an extra powerball number between 1 and 25 (or hit the random button) and throw in some money. Each entry costs $1. It will simulate draws and pay out your winning draws. The money won is added to your balance and used to play more (until you run out of money).</p>
-    <p>You can change the speed at which draws are generated and expand your winning draws at the bottom.</p>
+    <p>The rules are simple: pick 7 unique numbers between 1 and 35, and an extra powerball number between 1 and 25 (or hit the random button to pick random numbers for you) and throw in some money. Each entry costs $1. It will simulate draws and pay out your winning draws. The money won is added to your balance and used to play more (until you run out of money).</p>
+    <p>You can change the speed at which draws are generated.</p>
     <p>The prices are taken from Draw 1209, 18 July 2019 (you can view the list at the very bottom).</p>
     <div id="powerball-simulation-app"></div>
 </div>
