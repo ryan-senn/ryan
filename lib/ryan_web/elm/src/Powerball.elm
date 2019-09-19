@@ -29,7 +29,7 @@ main =
 
 costPerEntry : Int
 costPerEntry =
-    100
+    121
 
 
 prizes : Dict ( Int, Int ) ( Int, Int )
