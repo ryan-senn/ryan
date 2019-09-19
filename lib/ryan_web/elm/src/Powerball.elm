@@ -35,15 +35,15 @@ costPerEntry =
 prizes : Dict ( Int, Int ) ( Int, Int )
 prizes =
     Dict.empty
-        |> Dict.insert ( 7, 1 ) ( 3666666667, 134490400 )
-        |> Dict.insert ( 7, 0 ) ( 4927610, 7078443 )
-        |> Dict.insert ( 6, 1 ) ( 398385, 686176 )
-        |> Dict.insert ( 6, 0 ) ( 41095, 36115 )
-        |> Dict.insert ( 5, 1 ) ( 14310, 16943 )
-        |> Dict.insert ( 5, 0 ) ( 4000, 892 )
-        |> Dict.insert ( 4, 1 ) ( 6640, 1173 )
-        |> Dict.insert ( 3, 1 ) ( 1680, 188 )
-        |> Dict.insert ( 2, 1 ) ( 1035, 66 )
+        |> Dict.insert ( 7, 1 ) ( 15000000000, 134490400 )
+        |> Dict.insert ( 7, 0 ) ( 17376785, 7078443 )
+        |> Dict.insert ( 6, 1 ) ( 534295, 686176 )
+        |> Dict.insert ( 6, 0 ) ( 47835, 36115 )
+        |> Dict.insert ( 5, 1 ) ( 16760, 16943 )
+        |> Dict.insert ( 5, 0 ) ( 7390, 892 )
+        |> Dict.insert ( 4, 1 ) ( 4295, 1173 )
+        |> Dict.insert ( 3, 1 ) ( 1795, 188 )
+        |> Dict.insert ( 2, 1 ) ( 1090, 66 )
 
 
 type NumberType
@@ -402,7 +402,7 @@ view ({ draw, spent, won, budget, hasClickedPlay, speed } as model) =
         , lazy2 winningDrawsView model.showWinningDraws model.winningDraws
         , h3
             [ class "prizes" ]
-            [ text "Prizes (from Draw 1209, 18 July 2019)" ]
+            [ text "Prizes (from Draw 1217, 12 September 2019)" ]
         , prizesView
         , p
             []
