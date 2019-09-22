@@ -122,7 +122,21 @@ section#powerball-simulation
 
     div.numbers
         display: flex
-        margin-bottom: 2rem
+        flex-wrap: wrap
+        margin-bottom: 1rem
+    
+    div.game-mode
+        display: flex
+
+        label
+            font-weight: 300
+            margin-right: .6rem
+            margin-bottom: 0
+
+        select
+            width: auto
+            height: auto
+            margin: 0
 
     input.number, div.number
         width: 2.5rem
@@ -130,7 +144,7 @@ section#powerball-simulation
         padding: 0
         border: 1px solid #cccccc
         border-radius: 4px
-        margin: 0 1rem 0 0
+        margin: 0 .4rem .4rem 0
         display: flex
         align-items: center
         justify-content: center
@@ -221,6 +235,125 @@ section#powerball-simulation
             > div:last-child
                 padding-top: 0.5rem
                 margin-bottom: 0.5rem
+
+section#gold-lotto-simulation
+
+    .pointer
+        cursor: pointer
+
+    div.line
+        display: flex
+        margin: 1rem 0
+
+        label
+            margin-right: .6rem
+            margin-bottom: 0
+
+        select
+            width: auto
+            height: auto
+            margin: 0 .4rem 0 0
+    
+        button
+            span.fa
+                font-size: 1.4rem
+
+    button
+        margin: 0 .4rem 0 0
+        padding: .4rem .8rem
+        line-height: 1
+        height: 2.6rem
+        border-radius: .2rem
+
+        &.is-active
+            background-color: #333333
+    
+    div.button-group
+        button
+            margin: 0
+            border-radius: 0
+        
+            &:first-child
+                border-radius: .2rem 0 0 .2rem
+            
+            &:last-child
+                border-radius: 0 .2rem .2rem 0
+    
+    div.selected-numbers, div.draw-numbers
+        display: flex
+        flex-wrap: wrap
+
+        > div
+            border: 1px solid #dddddd
+            border-radius: 50%
+            width: 3.6rem
+            height: 3.6rem
+            display: flex
+            flex-wrap: wrap
+            justify-content: center
+            align-items: center
+            margin-right: .4rem
+            
+            &.is-winning
+                background-color: #b2ffb2
+            
+            &.is-sup
+                background-color: lighten(#8080ff, 15)
+
+    div.draw-numbers
+        > div
+            &:nth-child(7), &:nth-child(8)
+                background-color: lighten(#8080ff, 20)
+            
+            &.is-drawn
+                background-color: #b2ffb2
+                
+                &:nth-child(7), &:nth-child(8)
+                    background-color: lighten(#8080ff, 15)
+
+    div.number-pad
+        display: flex
+        flex-direction: column
+
+        div.number-row
+            display: flex
+
+            &:first-child
+                div.number
+                    border-width: 1px 1px 1px 0
+
+                    &:first-child
+                        border-width: 1px 1px 1px 1px
+
+        div.number
+            border: 1px solid #dddddd
+            border-width: 0 1px 1px 0
+            width: 4rem
+            height: 4rem
+            display: flex
+            justify-content: center
+            align-items: center
+            cursor: pointer
+
+            &:first-child
+                border-width: 0 1px 1px 1px
+            
+        div.number.is-selected
+            background-color: #555555
+            color: #ffffff
+
+    table.result
+        tr
+            display: flex
+
+            th
+                flex-basis: 10rem
+            
+            td
+                flex-basis: 15rem
+    
+    div.winning-draw
+        margin: 1rem 0
 
 section#daily-chart
     ul.charts

@@ -46,11 +46,16 @@
                         </a>
                     </li>
                     <li>
-                        <a href="<%= Routes.page_path(@conn, :powerball) %>">
-                            Powerball Simulation
-                        </a>
-                    </li>
-                    <li>
+                            <a href="<%= Routes.page_path(@conn, :powerball) %>">
+                                Powerball Simulation
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<%= Routes.page_path(@conn, :gold_lotto) %>">
+                                Gold Lotto Simulation
+                            </a>
+                        </li>
+                        <li>
                         <a href="<%= Routes.page_path(@conn, :daily_chart) %>">
                             Daily Charts
                         </a>

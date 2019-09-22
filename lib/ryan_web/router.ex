@@ -24,6 +24,7 @@ defmodule RyanWeb.Router do
     live "/domain-price", DomainPriceLive
     live "/inflation-calculator", InflationCalculatorLive
     get "/powerball", PageController, :powerball
+    get "/gold-lotto", PageController, :gold_lotto
     get "/daily-chart", PageController, :daily_chart
     get "/daily-chart/:chart", PageController, :daily_chart
   end

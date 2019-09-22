@@ -9,6 +9,10 @@ defmodule RyanWeb.PageController do
     render(conn, "powerball.html")
   end
 
+  def gold_lotto(conn, _params) do
+    render(conn, "gold_lotto.html")
+  end
+
   def daily_chart(conn, %{"chart" => chart}) do
     render(conn, "daily_chart.html", data: File.read!("./lib/daily_chart_data/#{chart}.json"))
   end
