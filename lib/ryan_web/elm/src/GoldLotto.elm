@@ -185,24 +185,20 @@ drawGenerator =
 
 drawGeneratorHelp : Draw -> Int -> Generator Draw
 drawGeneratorHelp draw number =
-    let
-        set =
-            Set.union draw.numbers draw.supps
-    in
-    if Set.size set < 8 || Set.member number set then
-        Random.int 1 45
-            |> Random.andThen
-                (drawGeneratorHelp
-                    (if Set.size draw.numbers < 6 then
-                        { draw | numbers = Set.insert number draw.numbers }
+    Random.int 1 45
+        |> Random.andThen
+            (if Set.member number <| Set.union draw.numbers draw.supps then
+                drawGeneratorHelp draw
 
-                     else
-                        { draw | supps = Set.insert number draw.supps }
-                    )
-                )
+             else if Set.size draw.numbers < 6 then
+                drawGeneratorHelp { draw | numbers = Set.insert number draw.numbers }
 
-    else
-        Random.constant draw
+             else if Set.size draw.supps < 2 then
+                drawGeneratorHelp { draw | supps = Set.insert number draw.supps }
+
+             else
+                always <| Random.constant draw
+            )
 
 
 view : Model -> Html Msg
