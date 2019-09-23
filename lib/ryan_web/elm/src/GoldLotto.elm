@@ -424,10 +424,13 @@ drawView : Model -> Html Msg
 drawView { userSelection, draw } =
     div
         [ class "line draw-numbers" ]
-        ((Set.union draw.numbers draw.supps
+        ((draw.numbers
             |> Set.toList
-            |> List.map Just
-         )
+            |> List.map Just)
+            ++ (draw.supps
+                |> Set.toList
+                |> List.map Just
+            )
             ++ List.repeat 8 Nothing
             |> List.take 8
             |> List.map (drawNumber userSelection)
