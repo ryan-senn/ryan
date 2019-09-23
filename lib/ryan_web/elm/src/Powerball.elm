@@ -556,7 +556,12 @@ winningDrawsView isShown winningDraws =
             [ class "button button-clear"
             , onClick ToggleWinningDraws
             ]
-            [ text <| if isShown then "Hide winning draws " else "Show winning draws "
+            [ text <|
+                if isShown then
+                    "Hide winning draws "
+
+                else
+                    "Show winning draws "
             , span
                 [ class <|
                     if isShown then
@@ -577,9 +582,8 @@ winningDrawsView isShown winningDraws =
         ]
 
 
-
-winningDrawView : (Combination, Combination) -> Html Msg
-winningDrawView (userCombination, draw) =
+winningDrawView : ( Combination, Combination ) -> Html Msg
+winningDrawView ( userCombination, draw ) =
     div
         [ class "winning-draw" ]
         [ combinationView (Just userCombination) (Just draw)

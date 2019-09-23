@@ -34,13 +34,20 @@ type GameMode
     | System Int
 
 
+type alias Draw =
+    { numbers : Set Int
+    , supps : Set Int
+    }
+
+
 type alias Model =
     { game : Game
     , gameMode : GameMode
     , speed : Int
     , userSelection : Set Int
-    , draw : Set Int
+    , draw : Draw
     , winningDraws : List WinningDraw
+    , showWinningDraws : Bool
     , isPlaying : Bool
     , balance : Int
     , spent : Int
@@ -54,8 +61,9 @@ init =
     , gameMode = Standard
     , speed = 10
     , userSelection = Set.empty
-    , draw = Set.empty
+    , draw = Draw Set.empty Set.empty
     , winningDraws = []
+    , showWinningDraws = True
     , isPlaying = False
     , balance = 0
     , spent = 0
@@ -72,7 +80,8 @@ type Msg
     | ClearUserSelection
     | Add Int
     | DelayRound (Set Int)
-    | RunRound (Set Int) (Set Int)
+    | RunRound (Set Int) Draw
+    | ToggleWinningDraws
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -103,7 +112,7 @@ update msg model =
                     , isPlaying = True
                   }
                 , if not model.isPlaying then
-                    Random.generate (RunRound model.userSelection) (numbersGenerator 8)
+                    Random.generate (RunRound model.userSelection) drawGenerator
 
                   else
                     Cmd.none
@@ -113,7 +122,7 @@ update msg model =
                 ( { model | balance = model.balance + cents }, Cmd.none )
 
         DelayRound userSelection ->
-            ( model, Random.generate (RunRound userSelection) (numbersGenerator 8) )
+            ( model, Random.generate (RunRound userSelection) drawGenerator )
 
         RunRound userSelection draw ->
             if numbersForGameMode model.gameMode == Set.size model.userSelection then
@@ -122,11 +131,14 @@ update msg model =
             else
                 ( model, Cmd.none )
 
+        ToggleWinningDraws ->
+            ( { model | showWinningDraws = not model.showWinningDraws }, Cmd.none )
 
-runRound : Set Int -> Set Int -> Model -> ( Model, Cmd Msg )
+
+runRound : Set Int -> Draw -> Model -> ( Model, Cmd Msg )
 runRound userSelection draw model =
     if model.spent + gameModeEntryCost model.game model.gameMode - model.won > model.balance then
-        ( { model | isPlaying = False, draw = Set.empty }, Cmd.none )
+        ( { model | isPlaying = False, draw = Draw Set.empty Set.empty }, Cmd.none )
 
     else
         let
@@ -163,6 +175,34 @@ numbersGeneratorHelp size set number =
 
     else
         Random.constant set
+
+
+drawGenerator : Generator Draw
+drawGenerator =
+    Random.int 1 45
+        |> Random.andThen (drawGeneratorHelp (Draw Set.empty Set.empty))
+
+
+drawGeneratorHelp : Draw -> Int -> Generator Draw
+drawGeneratorHelp draw number =
+    let
+        set =
+            Set.union draw.numbers draw.supps
+    in
+    if Set.size set < 8 || Set.member number set then
+        Random.int 1 45
+            |> Random.andThen
+                (drawGeneratorHelp
+                    (if Set.size draw.numbers < 6 then
+                        { draw | numbers = Set.insert number draw.numbers }
+
+                     else
+                        { draw | supps = Set.insert number draw.supps }
+                    )
+                )
+
+    else
+        Random.constant draw
 
 
 view : Model -> Html Msg
@@ -286,12 +326,35 @@ view model =
                     [ text <| displayDollars (model.balance - model.spent + model.won) ]
                 ]
             ]
+        , div
+            [ class "line" ]
+            [ label
+                []
+                [ text "Winning Draws" ]
+            , button
+                [ class "button button-clear"
+                , onClick ToggleWinningDraws
+                ]
+                [ text <|
+                    if model.showWinningDraws then
+                        "Hide "
+
+                    else
+                        "Show "
+                , span
+                    [ class <|
+                        if model.showWinningDraws then
+                            "fa fa-arrow-up"
+
+                        else
+                            "fa fa-arrow-down"
+                    ]
+                    []
+                ]
+            ]
+        , lazy3 winningDrawsView model.game model.showWinningDraws model.winningDraws
         , label
-            []
-            [ text "Winning Draws" ]
-        , lazy2 winningDrawsView model.game model.winningDraws
-        , label
-            [ class "line"]
+            [ class "line" ]
             [ text "Prizes" ]
         , lazy prizesView model.game
         ]
@@ -306,7 +369,7 @@ gameModeOption selectedGameMode ( gameMode, cost ) =
         [ text <| gameModeString gameMode ++ " - " ++ displayDollars cost ]
 
 
-selectedNumbersView : GameMode -> Set Int -> Set Int -> Html Msg
+selectedNumbersView : GameMode -> Set Int -> Draw -> Html Msg
 selectedNumbersView gameMode userSelection draw =
     div
         [ class "line selected-numbers" ]
@@ -317,14 +380,17 @@ selectedNumbersView gameMode userSelection draw =
         )
 
 
-selectedNumber : Set Int -> Maybe Int -> Html Msg
+selectedNumber : Draw -> Maybe Int -> Html Msg
 selectedNumber draw mNumber =
     case mNumber of
         Just number ->
             div
                 [ onClick <| ToggleNumber number
                 , class "pointer"
-                , classList [ ( "is-drawn", isMNumberMember draw mNumber ) ]
+                , classList
+                    [ ( "is-winning", Set.member number draw.numbers )
+                    , ( "is-sup", Set.member number draw.supps )
+                    ]
                 ]
                 [ text <| String.fromInt number ]
 
@@ -362,7 +428,10 @@ drawView : Model -> Html Msg
 drawView { userSelection, draw } =
     div
         [ class "line draw-numbers" ]
-        ((Set.toList draw |> List.map Just)
+        ((Set.union draw.numbers draw.supps
+            |> Set.toList
+            |> List.map Just
+         )
             ++ List.repeat 8 Nothing
             |> List.take 8
             |> List.map (drawNumber userSelection)
@@ -388,21 +457,29 @@ isMNumberMember set mNumber =
 
 type alias WinningDraw =
     { userSelection : Set Int
-    , draw : Set Int
+    , draw : Draw
     , gameMode : GameMode
     }
 
 
-winningDrawsView : Game -> List WinningDraw -> Html Msg
-winningDrawsView game winningDraws =
-    case winningDraws of
-        [] ->
-            text "No winning draws yet"
-        
-        _ ->
-            div
-                []
-                (List.map (winningDrawView game) winningDraws)
+winningDrawsView : Game -> Bool -> List WinningDraw -> Html Msg
+winningDrawsView game showWinningDraws winningDraws =
+    div
+        [ class "line" ]
+        [ if showWinningDraws then
+            if winningDraws /= [] then
+                div
+                    []
+                    (List.map (winningDrawView game) winningDraws)
+
+            else
+                div
+                    []
+                    [ text "No winning draws yet." ]
+
+          else
+            text ""
+        ]
 
 
 winningDrawView : Game -> WinningDraw -> Html Msg
@@ -411,23 +488,19 @@ winningDrawView game winningDraw =
         [ class "winning-draw" ]
         [ div
             []
-            [ text <| "+ " ++ (prize game winningDraw.gameMode winningDraw.userSelection winningDraw.draw |> displayDollars) ++ " (" ++ gameModeString winningDraw.gameMode  ++  ")" ]
+            [ text <| "+ " ++ (prize game winningDraw.gameMode winningDraw.userSelection winningDraw.draw |> displayDollars) ++ " (" ++ gameModeString winningDraw.gameMode ++ ")" ]
         , div
             [ class "selected-numbers" ]
             (winningDraw.userSelection |> Set.toList |> List.map (winningDrawNumber winningDraw.draw))
         ]
 
 
-winningDrawNumber : Set Int -> Int -> Html Msg
-winningDrawNumber draw number =
-    let
-        ( winningNumbers, suppNumbers ) =
-            splitDrawNumbers draw
-    in
+winningDrawNumber : Draw -> Int -> Html Msg
+winningDrawNumber { numbers, supps } number =
     div
         [ classList
-            [ ( "is-winning", Set.member number winningNumbers )
-            , ( "is-sup", Set.member number suppNumbers )
+            [ ( "is-winning", Set.member number numbers )
+            , ( "is-sup", Set.member number supps )
             ]
         ]
         [ text <| String.fromInt number ]
@@ -544,14 +617,11 @@ prizes game =
             ]
 
 
-prize : Game -> GameMode -> Set Int -> Set Int -> Int
-prize game gameMode userSelection draw =
+prize : Game -> GameMode -> Set Int -> Draw -> Int
+prize game gameMode userSelection { numbers, supps } =
     let
-        ( winningNumbers, suppNumbers ) =
-            splitDrawNumbers draw
-
         winningMatches =
-            Set.intersect userSelection winningNumbers
+            Set.intersect userSelection numbers
                 |> Set.size
                 |> (\size ->
                         if gameMode == Pick 4 then
@@ -565,24 +635,10 @@ prize game gameMode userSelection draw =
                    )
 
         suppMatches =
-            Set.intersect userSelection suppNumbers
+            Set.intersect userSelection supps
                 |> Set.size
     in
     highestMatchingPrice (prizes game) winningMatches suppMatches
-
-
-splitDrawNumbers : Set Int -> ( Set Int, Set Int )
-splitDrawNumbers draw =
-    Set.foldl splitDrawNumbersHelp ( Set.empty, Set.empty ) draw
-
-
-splitDrawNumbersHelp : Int -> ( Set Int, Set Int ) -> ( Set Int, Set Int )
-splitDrawNumbersHelp number ( winningNumbers, suppNumbers ) =
-    if Set.size winningNumbers < 6 then
-        ( Set.insert number winningNumbers, suppNumbers )
-
-    else
-        ( winningNumbers, Set.insert number suppNumbers )
 
 
 highestMatchingPrice : List Prize -> Int -> Int -> Int
