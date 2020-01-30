@@ -71,9 +71,9 @@
     </main>
     <footer>
         <div class="container">
-            <span>© 2019 Ryan Senn</span> <a href="https://github.com/ryan-senn" target="blank_"><span
+            <span>© 2019 Ryan Senn</span> <a href="https://github.com/ryan-senn" target="_blank" class="github"><span
                     class="fa fa-github"></span></a>
-            <span style="margin-left: 10px">
+            <span style="margin-left: 20px">
                 Working at <a href="https://tt.edu.au" target="_blank">Tradie Training</a>
             </span>
         </div>
