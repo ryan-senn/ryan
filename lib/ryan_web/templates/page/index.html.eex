@@ -1,29 +1,93 @@
 <section id="home">
-    <h1>Ryan Senn</h1>
-    <p>Random things built by me in Elixir and Elm, mainly Australian finance related.</p>
-    <h2>Salary Seeker</h2>
-    <p>Some listing don't show the salary range. This Script will continuously apply salary filters for a job, until you are left with the range configured by the advertiser.</p>
-    <a href="<%= Routes.live_path(@conn, RyanWeb.SalarySeekerLive) %>">
-        Salary Seeker
-    </a>
-    <h2>Domain price finder</h2>
-    <p>Similar to Salary Seeker, but this tool works with Domain listings.</p>
-    <a href="<%= Routes.live_path(@conn, RyanWeb.DomainPriceLive) %>">
-        Domain Price
-    </a>
-    <h2>Inflation calculator</h2>
-    <p>You enter a amount of dollars and a starting year, and it will show a table with inflation adjusted prices. I like to look at the history of sold houses, so I built this calculator to see how much they spent in inflation adjusted prices. That house that sold for $72,000 in 1983, how good of a deal was it really?</p>
-    <a href="<%= Routes.live_path(@conn, RyanWeb.InflationCalculatorLive) %>">
-        Inflation calculator
-    </a>
-    <h2>Powerball simulation</h2>
-    <p>Feeling lucky? Simulate playing the Australian Powerball with as much money and as many draws as you want!</p>
-    <a href="<%= Routes.page_path(@conn, :powerball) %>">
-        Powerball simulation
-    </a>
-    <h2>Daily charts</h2>
-    <p>Visualise the daily returns of the ASX 200, S&P 500, NASDAQ and Dow.</p>
-    <a href="<%= Routes.page_path(@conn, :daily_chart) %>">
-        Daily charts
-    </a>
+    <div class="card">
+        <div class="card-body">
+            <div class="img">
+                <img src="/images/ryan-140x140.jpg" />
+            </div>
+            <div class="card-body">
+                <h1>Ryan Senn</h1>
+                <p class="center">
+                    Random things built by me in Elixir and Elm, mainly Australian finance related.
+                </p>
+                <div class="row">
+                    <div class="col-12 col-md-6 col-lg-4 item">
+                        <span class="fas fa-money-bill-wave icon"></span>
+                        <h2>Salary Seeker</h2>
+                        <p>
+                            Some listing don't show the salary range. This Script will continuously apply salary
+                            filters for a job, until you are left with the range configured by the advertiser.</p>
+                        <a href="<%= Routes.live_path(@conn, RyanWeb.SalarySeekerLive) %>">
+                            Salary Seeker <span class="fa fa-arrow-right"></span>
+                        </a>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4 item">
+                        <span class="fa fa-home icon"></span>
+                        <h2>Domain price finder</h2>
+                        <p>Similar to Salary Seeker, but this tool works with Domain listings.</p>
+                        <a href="<%= Routes.live_path(@conn, RyanWeb.DomainPriceLive) %>">
+                            Domain Price <span class="fa fa-arrow-right"></span>
+                        </a>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4 item">
+                        <span class="fas fa-chart-bar icon"></span>
+                        <h2>Daily charts</h2>
+                        <p>Visualise the daily returns of the ASX 200, S&P 500, NASDAQ and Dow.</p>
+                        <a href="<%= Routes.page_path(@conn, :daily_chart) %>">
+                            Daily charts <span class="fa fa-arrow-right"></span>
+                        </a>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4 item">
+                        <span class="fas fa-chart-line icon"></span>
+                        <h2>Inflation Calculator</h2>
+                        <p>
+                            You enter a amount of dollars and a starting year, and it will show a table with
+                            inflation
+                            adjusted prices. I
+                            like to look at the history of sold houses, so I built this calculator to see how
+                            much they
+                            spent in inflation
+                            adjusted prices. That house that sold for $72,000 in 1983, how good of a deal was it
+                            really?
+                        </p>
+                        <a href="<%= Routes.live_path(@conn, RyanWeb.InflationCalculatorLive) %>">
+                            Inflation calculator <span class="fa fa-arrow-right"></span>
+                        </a>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4 item">
+                        <span class="fa fa-circle icon"></span>
+                        <h2>Powerball simulation</h2>
+                        <p>
+                            Feeling lucky? Simulate playing the Australian Powerball with as much money and as
+                            many draws as you want!
+                        </p>
+                        <p>
+                            <a href="<%= Routes.page_path(@conn, :powerball) %>">
+                                Powerball simulation <span class="fa fa-arrow-right"></span>
+                            </a>
+                        </p>
+                        <p>
+                            Edit: I have created a dedicated website to <a href="https://lottosimulation.com">simulate
+                                playing lotteries</a>, including more Australian, EU and US lotteries.
+                        </p>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4 item">
+                        <span class="fa fa-circle icon"></span>
+                        <h2>Gold Lotto simulation</h2>
+                        <p>
+                            Similar to the Powerball simulation, but different rules!
+                        </p>
+                        <p>
+                            <a href="<%= Routes.page_path(@conn, :gold_lotto) %>">
+                                Lotto simulation <span class="fa fa-arrow-right"></span>
+                            </a>
+                        </p>
+                        <p>
+                            Edit: I have created a dedicated website to <a href="https://lottosimulation.com">simulate
+                                playing lotteries</a>, including more Australian, EU and US lotteries.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>

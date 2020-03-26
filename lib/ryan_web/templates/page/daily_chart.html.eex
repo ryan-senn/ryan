@@ -1,37 +1,43 @@
-<section id="daily-chart">
-    <h1>Historical daily charts</h1>
-    <p>These charts show the historical daily swings. Data is taken from Yahoo Finance. Last updated 14 August 2019.</p>
-    <p>It's a simple way to view things in perspective when the media reports "meltdowns", "bloodbathes" or "the stock
-        market soaring".</p>
-    <p>You can hover (or click on mobile) each data point to see some information like the date, open, close and % change</p>
-    <p>The charts are not great on mobile, they take a while to load (~10s on my phone) and the data points are tricky to click on. Better seen on desktop or laptop.</p>
-    <ul class="charts">
-        <li>
-            <ul>
-                <li><a href="<%= Routes.page_path(@conn, :daily_chart, "asx200") %>">ASX 200 daily</a></li>
-                <li><a href="<%= Routes.page_path(@conn, :daily_chart, "asx200-weekly") %>">ASX 200 weekly</a></li>
-            </ul>
-        </li>
-        <li>
-            <ul>
-                <li><a href="<%= Routes.page_path(@conn, :daily_chart, "sp500") %>">S&P 500 daily</a></li>
-                <li><a href="<%= Routes.page_path(@conn, :daily_chart, "sp500-weekly") %>">S&P 500 weekly</a></li>
-            </ul>
-        </li>
-        <li>
-            <ul>
-                <li><a href="<%= Routes.page_path(@conn, :daily_chart, "nasdaq") %>">NASDAQ daily</a></li>
-                <li><a href="<%= Routes.page_path(@conn, :daily_chart, "nasdaq-weekly") %>">NASDAQ weekly</a></li>
-            </ul>
-        </li>
-        <li>
-            <ul>
-                <li><a href="<%= Routes.page_path(@conn, :daily_chart, "dow") %>">Dow Jones daily</a></li>
-                <li><a href="<%= Routes.page_path(@conn, :daily_chart, "dow-weekly") %>">Dow Jones weekly</a></li>
-            </ul>
-        </li>
-    </ul>
-    <div id="daily-chart-app"></div>
+<section class="card" id="daily-chart">
+    <div class="card-body">
+        <h1>Historical daily charts</h1>
+        <p>These charts show the historical daily swings. Data is taken from Yahoo Finance. Last updated 14 August 2019.
+        </p>
+        <p>It's a simple way to view things in perspective when the media reports "meltdowns", "bloodbathes" or "the
+            stock
+            market soaring".</p>
+        <p>You can hover (or click on mobile) each data point to see some information like the date, open, close and %
+            change</p>
+        <p>The charts are not great on mobile, they take a while to load (~10s on my phone) and the data points are
+            tricky to click on. Better seen on desktop or laptop.</p>
+        <ul class="charts">
+            <li>
+                <ul>
+                    <li><a href="<%= Routes.page_path(@conn, :daily_chart, "asx200") %>">ASX 200 daily</a></li>
+                    <li><a href="<%= Routes.page_path(@conn, :daily_chart, "asx200-weekly") %>">ASX 200 weekly</a></li>
+                </ul>
+            </li>
+            <li>
+                <ul>
+                    <li><a href="<%= Routes.page_path(@conn, :daily_chart, "sp500") %>">S&P 500 daily</a></li>
+                    <li><a href="<%= Routes.page_path(@conn, :daily_chart, "sp500-weekly") %>">S&P 500 weekly</a></li>
+                </ul>
+            </li>
+            <li>
+                <ul>
+                    <li><a href="<%= Routes.page_path(@conn, :daily_chart, "nasdaq") %>">NASDAQ daily</a></li>
+                    <li><a href="<%= Routes.page_path(@conn, :daily_chart, "nasdaq-weekly") %>">NASDAQ weekly</a></li>
+                </ul>
+            </li>
+            <li>
+                <ul>
+                    <li><a href="<%= Routes.page_path(@conn, :daily_chart, "dow") %>">Dow Jones daily</a></li>
+                    <li><a href="<%= Routes.page_path(@conn, :daily_chart, "dow-weekly") %>">Dow Jones weekly</a></li>
+                </ul>
+            </li>
+        </ul>
+        <div id="daily-chart-app"></div>
+    </div>
 </section>
 
 <%= if @data != nil do %>

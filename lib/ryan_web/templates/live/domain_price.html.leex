@@ -1,62 +1,70 @@
-<section id="domain-price">
-    <h1>Domain price tool</h1>
-        <div class="examples">
-        <p>Copy and paste the Property ID or URL, for example:</p>
-        <ul>
-            <li>2015664505</li>
-            <li>https://www.domain.com.au/2-bernarra-street-the-gap-qld-4061-2015664505</li>
-        </ul>
+<section class="card" id="domain-price">
+    <div class="card-body">
+        <h1>Domain price tool</h1>
+            <div class="examples">
+            <p>Copy and paste the Property ID or URL, for example:</p>
+            <ul>
+                <li>2015664505</li>
+                <li>https://www.domain.com.au/2-bernarra-street-the-gap-qld-4061-2015664505</li>
+            </ul>
+        </div>
+        <form phx-change="update-input">
+            <div class="form-group">
+                <label for="property_input">Property ID or URL</label>
+                <input type="text" class="form-control" name="property_input" value="<%= @property_input %>" />
+            </div>
+            <p>
+                Unfortunately, domain only allow for 500 requests per 24h for free accounts Also each price check counts as a request, so checking one house can use up to 30 requests.
+            </p>
+            <p>
+                If the limit for the account pre-filled below is reached, you'll have to create your own account. It takes about 1 minute to do so.
+            </p>
+            <ul>
+                <li>Go to <a href="https://developer.domain.com.au" target="_blank">https://developer.domain.com.au</a> and sign up</li>
+                <li>Click "Projects" in the menu at the top</li>
+                <li>Click "CREATE PROJECT" and enter "price check" or anything really in Project name and save</li>
+                <li>Click "Credentials" on the left, and click "CREATE OAUTH CLIENT"</li>
+                <li>From the dropdown, select "Client Credentials" and save. Your client ID should now be displayed at the top.</li>
+                <li>At the bottom of the page under "OAuth Client Secrets", enter "price check" or anything really and hit "ADD". There's your secret key.</li>
+                <li>In the menu on the left, click "API Access" and "ADD API". Under "Agents & Listings", click on "Add to project" for the free calls.</li>
+            </ul>
+            <p>Done! You can now use your very own client ID and secret key.</p>
+            <div class="form-group">
+                <label for="client_id_input">Domain API client id</label>
+                <input type="text" class="form-control" name="client_id_input" value="<%= @client_id_input %>" />
+            </div>
+            <div class="form-group">
+                <label for="client_secret_input">Domain API secret key</label>
+                <input type="text" class="form-control" name="client_secret_input" value="<%= @client_secret_input %>" />
+            </div>
+            <button class="btn btn-primary" phx-click="search">search</button>
+        </form>
+        <%= if @error == :denied do %>
+            <p>API call denied. Double check Client ID and secret key.</p>
+        <% end %>
+        <%= if @error == :not_found do %>
+            <p>Could not find requested property.</p>
+        <% end %>
+        <%= if @error == :rate_limit do %>
+            <p>Domain API rate limit. Follow the steps above to create your own access codes.</p>
+        <% end %>
+        <%= if @error == :unknown do %>
+            <p>An unknown error happended. Please let me know by PM.</p>
+        <% end %>
+        <%= if @is_searching && @error == nil do %>
+            <p>
+                <div>Property: <%= if @property == nil do %>Fetching... <% else %><%= @property["addressParts"]["displayAddress"] %><% end %></div>
+                <%= if @property != nil do %>
+                    <div>Min price: <%= if @min.match == nil do %>Clamping... <%= @min.min %> - <%= @min.max %> <% else %>$<%= @min.match %><% end %></div>
+                    <div>Max price: <%= if @max.match == nil do %>Clamping... <%= @max.min %> - <%= @max.max %> <% else %>$<%= @max.match %><% end %></div>
+                <% end %>
+            </p>
+        <% end %>
+        <p class="inspired">
+            Inspired by: 
+            <a class="url" href="https://www.reddit.com/r/AusFinance/comments/apsq14/i_wrote_a_python_script_to_get_a_price_guide_from/" target="_blank">
+                https://www.reddit.com/r/AusFinance/comments/apsq14/i_wrote_a_python_script_to_get_a_price_guide_from/
+            </a>
+        </p>
     </div>
-    <form phx-change="update-input">
-        <label for="property_input">Property ID or URL</label>
-        <input type="text" name="property_input" value="<%= @property_input %>" />
-        <p>
-            Unfortunately, domain only allow for 500 requests per 24h for free accounts Also each price check counts as a request, so checking one house can use up to 30 requests.
-        </p>
-        <p>
-            If the limit for the account pre-filled below is reached, you'll have to create your own account. It takes about 1 minute to do so.
-        </p>
-        <ul>
-            <li>Go to <a href="https://developer.domain.com.au" target="_blank">https://developer.domain.com.au</a> and sign up</li>
-            <li>Click "Projects" in the menu at the top</li>
-            <li>Click "CREATE PROJECT" and enter "price check" or anything really in Project name and save</li>
-            <li>Click "Credentials" on the left, and click "CREATE OAUTH CLIENT"</li>
-            <li>From the dropdown, select "Client Credentials" and save. Your client ID should now be displayed at the top.</li>
-            <li>At the bottom of the page under "OAuth Client Secrets", enter "price check" or anything really and hit "ADD". There's your secret key.</li>
-            <li>In the menu on the left, click "API Access" and "ADD API". Under "Agents & Listings", click on "Add to project" for the free calls.</li>
-        </ul>
-        <p>Done! You can now use your very own client ID and secret key.</p>
-        <label for="client_id_input">Domain API client id</label>
-        <input type="text" name="client_id_input" value="<%= @client_id_input %>" />
-        <label for="client_secret_input">Domain API secret key</label>
-        <input type="text" name="client_secret_input" value="<%= @client_secret_input %>" />
-        <button phx-click="search">search</button>
-    </form>
-    <%= if @error == :denied do %>
-        <p>API call denied. Double check Client ID and secret key.</p>
-    <% end %>
-    <%= if @error == :not_found do %>
-        <p>Could not find requested property.</p>
-    <% end %>
-    <%= if @error == :rate_limit do %>
-        <p>Domain API rate limit. Follow the steps above to create your own access codes.</p>
-    <% end %>
-    <%= if @error == :unknown do %>
-        <p>An unknown error happended. Please let me know by PM.</p>
-    <% end %>
-    <%= if @is_searching && @error == nil do %>
-        <p>
-            <div>Property: <%= if @property == nil do %>Fetching... <% else %><%= @property["addressParts"]["displayAddress"] %><% end %></div>
-            <%= if @property != nil do %>
-                <div>Min price: <%= if @min.match == nil do %>Clamping... <%= @min.min %> - <%= @min.max %> <% else %>$<%= @min.match %><% end %></div>
-                <div>Max price: <%= if @max.match == nil do %>Clamping... <%= @max.min %> - <%= @max.max %> <% else %>$<%= @max.match %><% end %></div>
-            <% end %>
-        </p>
-    <% end %>
-    <p>
-        Inspired by: 
-        <a class="url" href="https://www.reddit.com/r/AusFinance/comments/apsq14/i_wrote_a_python_script_to_get_a_price_guide_from/" target="_blank">
-            https://www.reddit.com/r/AusFinance/comments/apsq14/i_wrote_a_python_script_to_get_a_price_guide_from/
-        </a>
-    </p>
 </section>

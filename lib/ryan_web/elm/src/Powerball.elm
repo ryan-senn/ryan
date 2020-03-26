@@ -303,7 +303,7 @@ validateUserNumber numberType number =
 
 
 view : Model -> Html Msg
-view ({ draw, spent, won, budget, hasClickedPlay, speed } as model) =
+view ({ spent, won, budget, speed } as model) =
     div
         []
         [ div
@@ -312,7 +312,7 @@ view ({ draw, spent, won, budget, hasClickedPlay, speed } as model) =
                 []
                 [ text "Pick your numbers" ]
             , button
-                [ onClick GenerateUserCombination ]
+                [ onClick GenerateUserCombination, class "btn btn-primary" ]
                 [ text "Random" ]
             ]
         , if model.isPlaying then
@@ -354,14 +354,14 @@ view ({ draw, spent, won, budget, hasClickedPlay, speed } as model) =
         , div
             [ class "play" ]
             [ button
-                [ onClick <| Play 10000 ]
+                [ onClick <| Play 10000, class "btn btn-primary" ]
                 [ text "Throw in $100" ]
             , button
-                [ onClick <| Play 100000 ]
+                [ onClick <| Play 100000, class "btn btn-primary" ]
                 [ text "Throw in $1000" ]
             ]
         , table
-            [ class "result" ]
+            [ class "table result" ]
             [ tr
                 []
                 [ th
@@ -500,7 +500,7 @@ combinationNumber isMatch numberType mNumber =
 prizesView : Html Msg
 prizesView =
     Html.table
-        []
+        [ class "table" ]
         ([ tr
             []
             [ td
@@ -553,8 +553,7 @@ winningDrawsView isShown winningDraws =
     div
         [ class "winning-draws" ]
         [ button
-            [ class "button button-clear"
-            , onClick ToggleWinningDraws
+            [ onClick ToggleWinningDraws, class "btn btn-primary"
             ]
             [ text <|
                 if isShown then

@@ -1,34 +1,36 @@
-<section id="inflation_calculator">
+<section class="card" id="inflation_calculator">
+    <div class="card-body">
     <h1>Inflation calculator tool</h1>
-    <form phx-change="update-form">
-        <label for="price">Value in dollars</label>
-        <input type="text" value="<%= @price %>" name="price" id="price" />
-        <label for="year">Starting Year</label>
-        <select name="year" id="year">
-        <%= for i <- Ryan.Inflation.start_year() .. Enum.count(Ryan.Inflation.list()) + Ryan.Inflation.start_year() - 1 do %>
-            <option value="<%= i %>" <%= if @year == i do %>selected<% end %>><%= i %></option>
-        <% end %>
-        </select>
-        <label>Is now: $<%= @inflation |> Enum.at(-1) |> elem(0) %></label>
-        <table>
-            <tr>
-                <th>Year</th>
-                <th>Inflation that year</th>
-                <th>Value after inflation</th>
-            </tr>
-            <%= for {{price, percent}, i} <- Enum.with_index(@inflation) do %>
-            <tr>
-                <td><%= @year + i %></td>
-                <td><%= percent %>%</td>
-                <td>$<%= price %></td>
-            </tr>
+        <form phx-change="update-form">
+            <label for="price">Value in dollars</label>
+            <input type="text" value="<%= @price %>" name="price" id="price" />
+            <label for="year">Starting Year</label>
+            <select name="year" id="year">
+            <%= for i <- Ryan.Inflation.start_year() .. Enum.count(Ryan.Inflation.list()) + Ryan.Inflation.start_year() - 1 do %>
+                <option value="<%= i %>" <%= if @year == i do %>selected<% end %>><%= i %></option>
             <% end %>
-        </table>
-        <p>
-        Annualised inflation taken from: 
-        <a class="url" href="https://www.rateinflation.com/inflation-rate/australia-historical-inflation-rate?start-year=1950&end-year=2019" target="_blank">
-            https://www.rateinflation.com/inflation-rate/australia-historical-inflation-rate?start-year=1950&end-year=2019
-        </a>
-        </p>
-    </form>
+            </select>
+            <label>Is now: $<%= @inflation |> Enum.at(-1) |> elem(0) %></label>
+            <table class="table">
+                <tr>
+                    <th>Year</th>
+                    <th>Inflation that year</th>
+                    <th>Value after inflation</th>
+                </tr>
+                <%= for {{price, percent}, i} <- Enum.with_index(@inflation) do %>
+                <tr>
+                    <td><%= @year + i %></td>
+                    <td><%= percent %>%</td>
+                    <td>$<%= price %></td>
+                </tr>
+                <% end %>
+            </table>
+            <p class="inspired">
+            Annualised inflation taken from: 
+            <a class="url" href="https://www.rateinflation.com/inflation-rate/australia-historical-inflation-rate?start-year=1950&end-year=2019" target="_blank">
+                https://www.rateinflation.com/inflation-rate/australia-historical-inflation-rate?start-year=1950&end-year=2019
+            </a>
+            </p>
+        </form>
+    </div>
 </section>

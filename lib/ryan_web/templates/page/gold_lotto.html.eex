@@ -1,24 +1,31 @@
-<section id="gold-lotto-simulation">
-    <h1>Australian Gold Lotto</h1>
-    <p>Think you're lucky? Simulate playing the Australian Gold Lotto to find out!</p>
-    <p>
-        The rules are simple: pick 6 unique numbers between 1 and 45 
-        (or hit the random button to pick random numbers for you) and throw in some money. 
-        It will simulate draws and pay out your winning draws. 
-        The money won is added to your balance and used to play more (until you run out of money).
-    </p>
-    <p>For the more advanced users you can also play System and Pick games.</p>
-    <p>You can change the speed at which draws are generated and expand your winning draws at the bottom.</p>
-    <p>You can view the list at the very bottom.</p>
-    <div id="gold-lotto-simulation-app"></div>
-</div>
+<section class="card" id="gold-lotto-simulation">
+    <div class="card-body">
+        <h1>Australian Gold Lotto</h1>
+        <p>Think you're lucky? Simulate playing the Australian Gold Lotto to find out!</p>
+        <p>
+            The rules are simple: pick 6 unique numbers between 1 and 45
+            (or hit the random button to pick random numbers for you) and throw in some money.
+            It will simulate draws and pay out your winning draws.
+            The money won is added to your balance and used to play more (until you run out of money).
+        </p>
+        <p>For the more advanced users you can also play System and Pick games.</p>
+        <p>You can change the speed at which draws are generated and expand your winning draws at the bottom.</p>
+        <p>You can view the list at the very bottom.</p>
+        <p>
+            I have since polished and moved to a new website the <a
+                href="https://lottosimulation.com/au/lotto-sat">Saturday
+                Lotto</a> (known as Gold Lotto in some states). You can also play US and European lotteries.
+        </p>
+        <div id="gold-lotto-simulation-app"></div>
+    </div>
+</section>
 
 <%= if Mix.env() == :prod do %>
-    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/gold-lotto.min.js") %>"></script>
+<script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/gold-lotto.min.js") %>"></script>
 <% else %>
-    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/gold-lotto.js") %>"></script>
+<script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/gold-lotto.js") %>"></script>
 <% end %>
 
 <script>
-    Elm.GoldLotto.init({node: document.getElementById("gold-lotto-simulation-app")});
+    Elm.GoldLotto.init({ node: document.getElementById("gold-lotto-simulation-app") });
 </script>

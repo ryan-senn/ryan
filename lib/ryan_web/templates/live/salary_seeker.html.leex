@@ -1,34 +1,38 @@
-<section id="salary-seeker">
-    <h1>Salary seeker tool</h1>
-    <div class="examples">
-        <p>Copy and paste the Job ID or URL, for example:</p>
-        <ul>
-            <li>39493973</li>
-            <li>https://www.seek.com.au/job/39493973</li>
-            <li>https://www.seek.com.au/job/39493973?type=standout&searchrequesttoken=c8d32f46-cc12-46cd-9f6d-f0f71de9cb16</li>
-        </ul>
-    </div>
-    <form phx-change="update-input">
-        <label for="input">Job ID or URL</label>
-        <input type="text" name="input" value="<%= @input %>" />
-        <button phx-click="search">search</button>
-    </form>
-    <%= if @job_not_found do %>
-        <p>Could not find requested job.</p>
-    <% end %>
-    <%= if @is_searching && @job_not_found == false do %>
-        <p>
-            <div>Job: <%= if @job.title == nil do %>Fetching... <% else %><%= @job.title %><% end %></div>
-            <%= if @job.title != nil do %>
-                <div>Min salary: <%= if @min_salary.final == nil do %>Clamping... <%= @min_salary.min %> - <%= @min_salary.max %> <% else %>$<%= @min_salary.final %><% end %></div>
-                <div>Max salary: <%= if @max_salary.final == nil do %>Clamping... <%= @max_salary.min %> - <%= @max_salary.max %> <% else %>$<%= @max_salary.final %><% end %></div>
-            <% end %>
+<section class="card" id="salary-seeker">
+    <div class="card-body">
+        <h1>Salary seeker tool</h1>
+        <div class="examples">
+            <p>Copy and paste the Job ID or URL, for example:</p>
+            <ul>
+                <li>39493973</li>
+                <li>https://www.seek.com.au/job/39493973</li>
+                <li>https://www.seek.com.au/job/39493973?type=standout&searchrequesttoken=c8d32f46-cc12-46cd-9f6d-f0f71de9cb16</li>
+            </ul>
+        </div>
+        <form phx-change="update-input">
+            <div class="form-group">
+                <label for="input">Job ID or URL</label>
+                <input type="text" class="form-control" name="input" value="<%= @input %>" />
+            </div>
+            <button phx-click="search" class="btn btn-primary">search</button>
+        </form>
+        <%= if @job_not_found do %>
+            <p>Could not find requested job.</p>
+        <% end %>
+        <%= if @is_searching && @job_not_found == false do %>
+            <p>
+                <div>Job: <%= if @job.title == nil do %>Fetching... <% else %><%= @job.title %><% end %></div>
+                <%= if @job.title != nil do %>
+                    <div>Min salary: <%= if @min_salary.final == nil do %>Clamping... <%= @min_salary.min %> - <%= @min_salary.max %> <% else %>$<%= @min_salary.final %><% end %></div>
+                    <div>Max salary: <%= if @max_salary.final == nil do %>Clamping... <%= @max_salary.min %> - <%= @max_salary.max %> <% else %>$<%= @max_salary.final %><% end %></div>
+                <% end %>
+            </p>
+        <% end %>
+            <p class="inspired">
+            Inspired by: 
+            <a class="url" href="https://www.reddit.com/r/AusFinance/comments/anzxw1/i_made_a_tool_to_find_the_near_exact_salary_range/" target="_blank">
+                https://www.reddit.com/r/AusFinance/comments/anzxw1/i_made_a_tool_to_find_the_near_exact_salary_range/
+            </a>
         </p>
-    <% end %>
-        <p>
-        Inspired by: 
-        <a class="url" href="https://www.reddit.com/r/AusFinance/comments/anzxw1/i_made_a_tool_to_find_the_near_exact_salary_range/" target="_blank">
-            https://www.reddit.com/r/AusFinance/comments/anzxw1/i_made_a_tool_to_find_the_near_exact_salary_range/
-        </a>
-    </p>
+    </div>
 </section>

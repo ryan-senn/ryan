@@ -14,7 +14,8 @@ defmodule RyanWeb.Endpoint do
   plug Plug.Static,
     at: "/",
     from: :ryan,
-    gzip: false,
+    gzip: true,
+    headers: %{"cache-control" => "public, max-age=31536000"},
     only: ~w(css fonts images js favicon.ico robots.txt)
 
   # Code reloading can be explicitly enabled under the

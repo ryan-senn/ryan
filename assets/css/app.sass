@@ -1,15 +1,57 @@
-@import "~milligram/dist/milligram.min.css"
+@import "~bootstrap/scss/bootstrap.scss"
+
+*,
+*::before,
+*::after
+    box-sizing: border-box
+
+@font-face
+    font-family: 'Open Sans'
+    font-style: normal
+    font-weight: 300
+    src: local('Open Sans Light'), local('OpenSans-Light'), url(/fonts/open-sans-300.woff2) format('woff2')
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD
+    font-display: fallback
+
+@font-face
+    font-family: 'Open Sans'
+    font-style: normal
+    font-weight: 400
+    src: local('Open Sans Regular'), local('OpenSans-Regular'), url(/fonts/open-sans-400.woff2) format('woff2')
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD
+    font-display: fallback
+
+@font-face
+    font-family: 'Open Sans'
+    font-style: normal
+    font-weight: 600
+    src: local('Open Sans SemiBold'), local('OpenSans-SemiBold'), url(/fonts/open-sans-600.woff2) format('woff2')
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD
+    font-display: fallback
+
+*
+    font-family: "Open Sans", arial, sans-serif
+    font-weight: 400
+
+a
+    text-decoration: none
+    color: #6772e5
+
+    &:hover
+        color: darken(#6772e5, 15%)
 
 body
     margin: 0
     min-height: 100vh
     display: flex
     flex-direction: column
+    background-color: #305B90
 
 header
     border-bottom: 1px solid #eeeeee
     color: #666666
-    background-color: #f6f9fc
+    background-color: #ffffff
+    margin-bottom: 40px
 
     nav
         display: flex
@@ -40,7 +82,7 @@ header
                 right: 0
                 z-index: 1000
                 flex-direction: column
-                top: 4.6rem
+                top: 3.6rem
                 padding: 4rem
                 margin: 0
                 background-color: #f6f9fc
@@ -81,25 +123,77 @@ footer
     color: #666666
     background-color: #f6f9fc
     padding: 10px 0
+    margin-top: 40px
 
     div.container
         display: flex
         align-items: center
 
         a.github
-            margin-left: 1rem
-            font-size: 3rem
+            margin-left: 15px
+            font-size: 20pt
 
+section.card
+    margin-bottom: 30px
+
+    h1
+        font-size: 20pt
+        margin: 20px 0 40px
+
+    div.card-body
+        p
+            color: #555555
+            line-height: 1.8
+
+p.inspired
+    margin-top: 60px
 
 // page specific css, move out if it grows
 
 section#home
-    h2
-        font-size: 3rem
-        margin-top: 3rem
+    padding-top: 80px
+
+    div.card
+        padding: 0 80px
+
+        @include media-breakpoint-down(sm)
+            padding: 0 50px
+
+        @include media-breakpoint-down(xs)
+            padding: 0
+
+    div.img
+        display: flex
+        justify-content: center
+
+        img
+            width: 140px
+            height: 140px
+            border-radius: 50%
+            margin-top: -70px
     
-    p
-        margin-bottom: 1rem
+    h1
+        text-align: center
+        font-size: 20pt
+        margin: 20px 0
+    
+    p.center
+        text-align: center
+        margin-bottom: 40px
+
+    div.item
+        margin: 40px 0
+
+        span.icon
+            font-size: 30pt
+            color: #666666
+
+        h2
+            font-size: 16pt
+            margin: 30px 0
+
+        p
+            color: #555555
 
 section#salary-seeker
     div.examples
@@ -118,7 +212,8 @@ section#powerball-simulation
             margin: 0 0 0 2rem
 
     h3
-        font-size: 2.4rem
+        font-size: 20pt
+        margin: 10px 0
 
     div.numbers
         display: flex
@@ -221,9 +316,11 @@ section#powerball-simulation
         margin-bottom: 1rem
 
     div.winning-draws
+        margin-bottom: 4rem
+
         button
-            margin-bottom: 4rem
-            padding: 0
+            span.fa
+                line-height: 0
     
         div.winning-draw
             display: flex
@@ -267,6 +364,7 @@ section#gold-lotto-simulation
 
         &.is-active
             background-color: #333333
+            color: #ffffff
     
     div.button-group
         button

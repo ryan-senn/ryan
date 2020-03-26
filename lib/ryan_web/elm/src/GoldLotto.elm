@@ -284,7 +284,7 @@ view model =
                 [ text "$10,000" ]
             ]
         , table
-            [ class "result" ]
+            [ class "table result" ]
             [ tr
                 []
                 [ th
@@ -508,7 +508,7 @@ winningDrawNumber { numbers, supps } number =
 prizesView : Game -> Html Msg
 prizesView game =
     Html.table
-        []
+        [ class "table" ]
         ([ tr
             []
             [ td
