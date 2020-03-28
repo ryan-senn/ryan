@@ -1,0 +1,37 @@
+<section id="home">
+    <div class="card">
+        <div class="card-body">
+            <h1>Ryan Senn uses:</h1>
+            <h2>Hardware</h2>
+            <ul>
+                <li>Imac 27", 2013</li>
+                <li>MacBook Air 13", 2017</li>
+                <li>Mac Keyboard</li>
+                <li>Logitech G203 Prodidgy gaming mouse</li>
+                <li>Samsung UD590 monitor, 28"</li>
+            </ul>
+            <h2>Software</h2>
+            <ul>
+                <li>Chrome</li>
+                <li>Iterm2</li>
+                <li>Visual studio code</li>
+                <li>Postico</li>
+                <li>Spotify</li>
+                <li>Sublime text</li>
+            </ul>
+            <h2>Programming languages</h2>
+            <h3>Current programming languages of choice</h3>
+            <ul>
+                <li>Elm</li>
+                <li>Elixir (Phoenix)</li>
+                <li>Haskell</li>
+                <li>Sass</li>
+            </ul>
+            <h3>Programming languages used in the past</h3>
+            <ul>
+                <li>PHP (Laravel, Symfony)</li>
+                <li>Javascript (jQuery, knockout, angular, react, vuejs)</li>
+            </ul>
+        </div>
+    </div>
+</section>

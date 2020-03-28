@@ -20,4 +20,8 @@ defmodule RyanWeb.PageController do
   def daily_chart(conn, _params) do
     render(conn, "daily_chart.html", data: nil)
   end
+
+  def uses(conn, _params) do
+    render(conn, "uses.html")
+  end
 end
