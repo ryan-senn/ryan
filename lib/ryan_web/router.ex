@@ -27,6 +27,7 @@ defmodule RyanWeb.Router do
     get "/gold-lotto", PageController, :gold_lotto
     get "/daily-chart", PageController, :daily_chart
     get "/daily-chart/:chart", PageController, :daily_chart
+    live "/google-keyword-rank", GoogleKeywordRankLive
     get "/uses", PageController, :uses
   end
 

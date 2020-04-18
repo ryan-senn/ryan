@@ -528,6 +528,18 @@ section#daily-chart
                         justify-content: center
                         font-size: 1.2rem
 
+section#google-keyword-rank
+    table tbody tr
+        td
+            max-width: 100px
+            overflow: hidden
+            text-overflow: ellipsis
+            white-space: nowrap
+        
+        &.active td
+            background-color: #333333
+            color: #dddddd
+
 div.tippy-popper
     div.tippy-tooltip
         padding: 1.5rem
@@ -539,4 +551,3 @@ div.tippy-popper
                 padding: 0
                 list-style: none
                 letter-spacing: 1px
-            
