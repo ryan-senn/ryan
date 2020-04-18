@@ -7,11 +7,11 @@
         <form phx-submit="submit">
             <div class="form-group">
                 <label for="domain">Domain</label>
-                <input value="tt.edu.au" type="text" id="domain" name="domain" class="form-control" required />
+                <input value="<%= @domain %>" type="text" id="domain" name="domain" class="form-control" required />
             </div>
             <div class="form-group">
                 <label for="keywords">Keywords</label>
-                <textarea name="keywords" id="keywords" class="form-control" required>White Card Gold Coast</textarea>
+                <textarea name="keywords" id="keywords" class="form-control" required><%= @keywords %></textarea>
             </div>
             <input type="submit" value="Check" />
         </form>
@@ -19,8 +19,8 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Rank</th>
-                        <th>URL</th>
+                        <th class="rank">#</th>
+                        <th class="url">URL</th>
                     </tr>
                 </thead>
                 <tbody>

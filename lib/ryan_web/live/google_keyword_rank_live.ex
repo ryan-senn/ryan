@@ -4,42 +4,44 @@ defmodule RyanWeb.GoogleKeywordRankLive do
   def render(assigns), do: RyanWeb.LiveView.render("google_keyword_rank.html", assigns)
 
   def mount(_params, socket) do
-    {:ok, assign(socket, error: nil, results: nil)}
+    {:ok, assign(socket, domain: "", keywords: "", error: nil, results: nil)}
   end
 
   def handle_event("submit", %{"domain" => domain, "keywords" => keywords}, socket) do
     url = "https://www.google.com/search?q=#{URI.encode(keywords)}"
 
-    results =
-      0..9
-      |> Enum.map(fn i ->
-        Task.async(fn -> fetch(url, i) end)
-      end)
-      |> Enum.map(&Task.await/1)
+    {:noreply, socket}
 
-    if Enum.all?(results, fn {status, _} -> status == :ok end) do
-      results =
-        results
-        |> Enum.flat_map(fn {:ok, results} -> results end)
+    case fetch([], url) do
+      {:ok, results} ->
+        {:noreply,
+         assign(socket, error: nil, results: results, domain: domain, keywords: keywords)}
 
-      {:noreply, assign(socket, results: results, domain: domain)}
-    else
-      {:noreply, assign(socket, error: "One or more pages couldn't load")}
+      {:error, error} ->
+        {:noreply, assign(socket, error: error, domain: domain, keywords: keywords)}
     end
   end
 
-  defp fetch(url, i) do
-    case HTTPoison.get(url <> "&start=#{i * 10}") do
+  defp fetch(acc, url) do
+    case HTTPoison.get(url) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        results =
+        links =
           body
           |> Floki.parse_document!()
           |> Floki.find("a")
-          |> Enum.reduce([], fn node, acc ->
-            acc ++ transform_node(node)
-          end)
 
-        {:ok, results}
+        results = Enum.reduce(links, [], fn node, acc -> acc ++ transform_node(node) end)
+
+        next = "https://www.google.com" <> find_next(links)
+
+        acc = acc ++ results
+
+        if Enum.count(acc) < 100 do
+          Process.sleep(Enum.random(100..1000))
+          fetch(acc, next)
+        else
+          {:ok, acc}
+        end
 
       {:ok, %HTTPoison.Response{status_code: 302}} ->
         {:error, "Google rate limit"}
@@ -60,7 +62,22 @@ defmodule RyanWeb.GoogleKeywordRankLive do
     [uri]
   end
 
-  defp transform_node(_) do
-    []
+  defp transform_node(_), do: []
+
+  defp find_next([]), do: nil
+
+  defp find_next(links) do
+    [head | tail] = links
+    find_next(head, tail)
+  end
+
+  defp find_next({"a", attributes, _}, links) do
+    if Enum.any?(attributes, fn attribute -> attribute == {"aria-label", "Next page"} end) do
+      {_, value} = Enum.find(attributes, fn {key, _} -> key == "href" end)
+
+      value
+    else
+      find_next(links)
+    end
   end
 end

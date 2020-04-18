@@ -529,14 +529,24 @@ section#daily-chart
                         font-size: 1.2rem
 
 section#google-keyword-rank
-    table tbody tr
+    table
+        width: 100%
+        table-layout: fixed
+        overflow-wrap: break-word
+
+        th.rank
+            width: 40px
+
+        th.url
+            width: calc(100% - 40px)
+
         td
-            max-width: 100px
-            overflow: hidden
-            text-overflow: ellipsis
             white-space: nowrap
         
-        &.active td
+        td.url
+            overflow-x: auto
+
+        tr.active td
             background-color: #333333
             color: #dddddd
 
