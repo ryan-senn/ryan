@@ -10,17 +10,6 @@ defmodule RyanWeb.GoogleKeywordRankLive do
   def handle_event("submit", %{"domain" => domain, "keywords" => keywords}, socket) do
     url = "https://www.google.com/search?q=#{URI.encode(keywords)}&num=100"
 
-    case fetch(url) do
-      {:ok, results} ->
-        {:noreply,
-         assign(socket, error: nil, results: results, domain: domain, keywords: keywords)}
-
-      {:error, error} ->
-        {:noreply, assign(socket, error: error, domain: domain, keywords: keywords)}
-    end
-  end
-
-  defp fetch(url) do
     case HTTPoison.get(url, [], timeout: 10_000, recv_timeout: 10_000) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         results =
@@ -29,13 +18,20 @@ defmodule RyanWeb.GoogleKeywordRankLive do
           |> Floki.find("a")
           |> Enum.reduce([], fn node, acc -> acc ++ transform_node(node) end)
 
-        {:ok, results}
+        {:noreply,
+         assign(socket, error: nil, results: results, domain: domain, keywords: keywords)}
 
       {:ok, %HTTPoison.Response{status_code: 302}} ->
-        {:error, "Google rate limit"}
+        {:error,
+         assign(socket,
+           error: "Google rate limit",
+           results: nil,
+           domain: domain,
+           keywords: keywords
+         )}
 
       {:error, error} ->
-        {:error, error}
+        {:error, assign(socket, error: error, results: nil, domain: domain, keywords: keywords)}
     end
   end
 
