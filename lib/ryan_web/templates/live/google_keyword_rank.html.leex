@@ -27,7 +27,7 @@
                     <%= for {result, index} <- Enum.with_index(@results) do %>
                         <tr <%= if result.host == @domain do %>class="active"<% end %>>
                             <td><%= index + 1 %></td>
-                            <td><%= URI.to_string(result) %></td>
+                            <td class="url"><%= URI.to_string(result) %></td>
                         </tr>
                     <% end %>
                 </tbody>
