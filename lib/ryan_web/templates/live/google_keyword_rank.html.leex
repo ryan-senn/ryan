@@ -27,7 +27,28 @@
                     <%= for {result, index} <- Enum.with_index(@results) do %>
                         <tr <%= if result.host == @domain do %>class="active"<% end %>>
                             <td><%= index + 1 %></td>
-                            <td class="url"><%= URI.to_string(result) %></td>
+                            <td class="url <%= if @backlinks == nil do %>loading<% end %>">
+                                <div><%= URI.to_string(result) %></div>
+                                <%= if @backlinks == nil do %>
+                                    <div class="spinner-grow" role="status">
+                                        <span class="sr-only">Loading</span>
+                                    </div>
+                                <% end %>
+                                <%= if @backlinks != nil do %>
+                                    <%= for %{uri: uri, links: links} <- @backlinks do %>
+                                        <%= if uri.host == result.host do %>
+                                            <div class="backlinks">
+                                                <%= for link <- links do %>
+                                                    <div>
+                                                        <span class="fas fa-level-up-alt"></span>
+                                                        <%= link %>
+                                                    </div>
+                                                <% end %>
+                                            </div>
+                                        <% end %>
+                                    <% end %>
+                                <% end %>
+                            </td>
                         </tr>
                     <% end %>
                 </tbody>

@@ -540,9 +540,24 @@ section#google-keyword-rank
         th.url
             width: calc(100% - 60px)
 
+        td.url.loading
+            display: flex
+            justify-content: space-between
+
+            div.spinner-grow
+                min-width: 30px
+
         tr.active td
             background-color: #333333
             color: #dddddd
+
+        div.backlinks
+            > div
+                padding-left: 20px
+
+                span.fas
+                    transform: rotate(90deg)
+                    margin-right: 10px
 
 div.tippy-popper
     div.tippy-tooltip

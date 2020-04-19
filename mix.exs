@@ -46,7 +46,8 @@ defmodule Ryan.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:httpoison, "~> 1.6"},
       {:csv, "~> 2.3"},
-      {:floki, "~> 0.26.0"}
+      {:floki, "~> 0.26.0"},
+      {:sh, "~> 1.1.2"}
     ]
   end
 
