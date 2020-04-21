@@ -1,5 +1,6 @@
 defmodule RyanWeb.PageController do
   use RyanWeb, :controller
+  alias Ryan.GoogleRank
 
   def index(conn, _params) do
     render(conn, "index.html")
@@ -23,5 +24,20 @@ defmodule RyanWeb.PageController do
 
   def uses(conn, _params) do
     render(conn, "uses.html")
+  end
+
+  def google_rank(conn, _params) do
+    render(conn, "google_rank.html", csrfToken: get_csrf_token())
+  end
+
+  def google_rank_search(conn, %{"keywords" => keywords}) do
+    json(conn, GoogleRank.get_search_results(keywords))
+  end
+
+  def google_rank_backlinks(conn, %{"url" => url, "domain" => domain}) do
+    case GoogleRank.get_backlinks(url, domain) do
+      {:ok, links} -> json(conn, links)
+      {:error, error} -> json(conn, [])
+    end
   end
 end

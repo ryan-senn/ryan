@@ -27,8 +27,13 @@ defmodule RyanWeb.Router do
     get "/gold-lotto", PageController, :gold_lotto
     get "/daily-chart", PageController, :daily_chart
     get "/daily-chart/:chart", PageController, :daily_chart
-    live "/google-keyword-rank", GoogleKeywordRankLive
     get "/uses", PageController, :uses
+
+    live "/google-keyword-rank", GoogleKeywordRankLive
+
+    get "/google-rank", PageController, :google_rank
+    post "/google-rank/search", PageController, :google_rank_search
+    post "/google-rank/backlinks", PageController, :google_rank_backlinks
   end
 
   # Other scopes may use custom stacks.

@@ -1,0 +1,21 @@
+<section class="card" id="google-rank">
+    <div class="card-body">
+        <h1>Google keyword rank</h1>
+        <p>View how a website performs in the top 100 pages of google. Includes backlink search!</p>
+        <div id="google-rank-app"></div>
+    </div>
+</section>
+
+<%= if Mix.env() == :prod do %>
+<script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/google-rank.min.js") %>"></script>
+<% else %>
+<script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/google-rank.js") %>"></script>
+<% end %>
+
+<script>
+<%= if Mix.env() == :prod do %>
+Elm.GoogleRank.init({ node: document.getElementById("google-rank-app"), flags: {apiEndpoint: "https://ryansenn.dev/google-rank", csrfToken: "<%= @csrfToken %>"} });
+<% else %>
+Elm.GoogleRank.init({ node: document.getElementById("google-rank-app"), flags: {apiEndpoint: "https://localhost:4001/google-rank", csrfToken: "<%= @csrfToken %>"} });
+<% end %>
+</script>
