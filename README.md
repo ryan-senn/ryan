@@ -1,5 +1,12 @@
 # ryansenn.dev
 
+## Todo
+
+- Make google rank use ports and JS instead of fetching backlinks through server
+- Follow backlinks instad of relying on URL, we miss backlinks using url shortneres etc.
+
+## Setup
+
 [https://ryansenn.dev](https://ryansenn.dev) is built using the Phoenix Framework written in Elixir and some Elm.
 
 To start your Phoenix server:

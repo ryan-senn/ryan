@@ -12,7 +12,7 @@
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-4 item">
                         <span class="fas fa-money-bill-wave icon"></span>
-                        <h2>Salary Seeker</h2>
+                        <h2>Salary seeker</h2>
                         <p>
                             Some listing don't show the salary range. This Script will continuously apply salary
                             filters for a job, until you are left with the range configured by the advertiser.</p>
@@ -38,7 +38,7 @@
                     </div>
                     <div class="col-12 col-md-6 col-lg-4 item">
                         <span class="fas fa-chart-line icon"></span>
-                        <h2>Inflation Calculator</h2>
+                        <h2>Inflation calculator</h2>
                         <p>
                             You enter a amount of dollars and a starting year, and it will show a table with
                             inflation
@@ -84,6 +84,31 @@
                         <p>
                             Edit: I have created a dedicated website to <a href="https://lottosimulation.com">simulate
                                 playing lotteries</a>, including more Australian, EU and US lotteries.
+                        </p>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4 item">
+                        <span class="fa fa-chart-line icon"></span>
+                        <h2>Keyword rank checker</h2>
+                        <p>
+                            Tool to easily find the ranking of websites. Includes the option to detect backlinks within
+                            the top 100 SERP. Discover your competitor's best backlinks for specific keywords.
+                        </p>
+                        <p>
+                            <a href="https://seoapps.dev/keyword-rank">
+                                Keyword rank checker <span class="fa fa-arrow-right"></span>
+                            </a>
+                        </p>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4 item">
+                        <span class="fa fa-file-alt icon"></span>
+                        <h2>Word counter</h2>
+                        <p>
+                            Tool to count the words and keywords of text. Useful when writing SEO optimised articles.
+                        </p>
+                        <p>
+                            <a href="https://seoapps.dev/word-counter">
+                                Word coutner <span class="fa fa-arrow-right"></span>
+                            </a>
                         </p>
                     </div>
                 </div>
