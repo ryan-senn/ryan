@@ -16,7 +16,7 @@ defmodule RyanWeb.Endpoint do
     from: :ryan,
     gzip: true,
     headers: %{"cache-control" => "public, max-age=31536000"},
-    only: ~w(css fonts images js favicon.ico robots.txt)
+    only: ~w(css fonts images js favicon.ico robots.txt sitemap.xml)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
