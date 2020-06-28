@@ -70,11 +70,8 @@
     </main>
     <footer>
         <div class="container">
-            <span>© 2019 Ryan Senn</span> <a href="https://github.com/ryan-senn" target="_blank" class="github"><span
-                    class="fab fa-github"></span></a>
-            <span style="margin-left: 20px">
-                Working at <a href="https://tt.edu.au" target="_blank">Tradie Training</a>
-            </span>
+            <span>© 2019 Ryan Senn</span> <a href="https://github.com/ryan-senn" target="_blank"
+                rel="noopener noreferrer" class="github"><span class="fab fa-github"></span></a>
         </div>
     </footer>
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
